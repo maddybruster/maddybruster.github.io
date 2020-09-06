@@ -1,0 +1,241 @@
+/*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
+
+/* Document
+   ========================================================================== */
+
+/**
+ * 1. Correct the line height in all browsers.
+ * 2. Prevent adjustments of font size after orientation changes in iOS.
+ */
+ @font-face {
+   font-family: 'Replica-Light';
+src: url('assets/Replica-Light.otf');
+ }
+ /* http://meyerweb.com/eric/tools/css/reset/
+    v2.0 | 20110126
+    License: none (public domain)
+ */
+
+ body, html {
+     margin-left:1% ;
+     margin-right: 1%;
+     padding: 0;
+     height: 100%;
+     box-sizing: border-box;
+     overflow:hidden;
+
+
+ }
+
+ * {
+     box-sizing: inherit;
+ }
+
+ /* HTML5 display-role reset for older browsers */
+ article, aside, details, figcaption, figure,
+ footer, header, hgroup, menu, nav, section {
+ 	display: block;
+ }
+
+ body {
+     font-family: 'Replica-Light', Helvetica, Arial, sans-serif;
+     line-height: 1;
+     font-size: 1.7em;
+     word-spacing: 0.002em;
+
+ }
+
+ p {
+margin-top: 2%;
+margin-block-start: 10px;
+    margin-block-end: 0px;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+
+ }
+
+ #next {
+
+padding-left: 75%;
+ }
+
+
+
+ ol, ul {
+ 	list-style: none;
+ }
+ blockquote, q {
+ 	quotes: none;
+ }
+ blockquote:before, blockquote:after,
+ q:before, q:after {
+ 	content: '';
+ 	content: none;
+ }
+ table {
+ 	border-collapse: collapse;
+ 	border-spacing: 0;
+ }
+
+ a {
+   text-decoration: underline;
+   color:inherit;
+   font-size:inherit;
+ }
+
+ a:hover{
+   text-decoration: none;
+   color:inherit;
+   font-size:inherit;
+
+ }
+
+ a.icon {
+   font-family: 'Replica-Light', Helvetica, Arial, sans-serif;
+   text-decoration: none;
+   font-size: 1.9em;
+   display: inline-block;
+  vertical-align:top;
+  margin-top:-0.05em;
+  line-height: 1em;
+}
+
+a.icon:hover{
+
+  font-family: 'Replica-Light', Helvetica, Arial, sans-serif;
+  color: white;
+  font-size: 1.9em;
+  display: inline-block;
+  vertical-align:top;
+  margin-top:-0.05em;
+  line-height: 1em;
+  letter-spacing: 0.001em;
+
+
+}
+
+img{
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+  margin-bottom:20px;
+  margin-right: 5px;
+}
+
+
+ #container {
+ 	width: 100vw;
+ 	height: 100vh;
+ 	font-size: 3.25vw;
+ 	line-height: 4.25vw;
+ }
+
+ #form {
+ 	width: 100%;
+ 	height: 100%;
+ }
+
+ .cycle-slideshow {
+   max-width: 100%;
+   height: auto;
+	font-size: .4em;
+
+padding:0;
+	cursor: pointer;
+	display: block;
+}
+
+
+
+
+ img.inline {
+     height: 0.95em;
+     margin-bottom: -0.2em;
+ }
+
+ .popover {
+     display: none;
+     position: fixed;
+     pointer-events: none;
+     max-width: 500px;
+ }
+
+ .popover img {
+     width: 100%;
+ }
+
+ ::selection {
+   background:#5b673b;
+ }
+ ::-moz-selection {
+   background: #5b673b;
+ }
+
+ #popup {
+ 	font-size: .5em;
+ 	line-height: 1.5em;
+ 	width: 70%;
+ 	position: fixed;
+ 	height: auto;
+ 	top: 10%;
+ 	left: 5%;
+ 	background: #5b673b;
+ 	padding: 2%;
+ 	color: #ffffff;
+
+ }
+
+
+ /* Media queries */
+
+  @media only screen and (max-width: 1024px) {
+
+
+
+    #next {
+
+    padding-left:95%;
+    }
+  }
+
+ @media only screen and (max-width: 960px) {
+
+
+ #container {
+ 	font-size: 4.25vw;
+ 	line-height: 5.75vw;
+ }
+
+ #next {
+
+ padding-left:90%;
+ }
+
+ }
+
+ @media only screen and (max-width: 500px) {
+
+
+
+ #container {
+ 	font-size: 5.25vw;
+ 	line-height: 7.25vw;
+
+ }
+
+ #next {
+
+padding-left:90%;
+ }
+
+ #mailchimp input[type="submit"] {
+ 			font-size: 5.25vw;
+ 			padding: 6px;
+ 			width: 30vw;
+ }
+
+ #mailchimp input {
+ 	font-size: 5.25vw;
+     padding: 6px;
+     width: 33vw;
+ }
