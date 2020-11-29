@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+
+.flex-container {
+  display: flex;
+  align-items: stretch;
+	margin-bottom: 0.5rem;
+	border-radius: 25px;
+}
+
+.flex-container-round {
+  display: flex;
+  align-items: stretch;
+	margin-bottom: 0.25rem;
+	border: 2px solid;
+	border-radius: 25px;
+
+}
+.outline{
+	border: 2px solid #000000;
+}
+
+
+.Dodgerblue{
+	background-color:DodgerBlue;
+}
+
+.red{
+	background-color:red;
+	border: 3px solid inherit;
+}
+
+.thistle{
+	background-color:thistle;
+	border: 3px solid Forestgreen;
+}
+
+.yellow{
+	background-color:gold;
+	border: 3px solid DarkOrange;
+}
+
+.flex-container > div {
+  color: #00000;
+	font-family: 'Helvetica', sans-serif;
+  text-align: left;
+	margin:2px;
+  line-height: 1.3rem;
+  font-size: 1.1rem;
+	border-radius: 25px;
+}
+</style>
+</head>
+<body>
+<br>
+
+<div class="flex-container">
+  <div class="outline" style="flex-grow: 2"></div>
+  <div style="background-color:#ffffff; flex-grow: 3; margin-left:10px"><b>Maddy Bruster is a graphic designer living and working in Brooklyn, New York.</b></div>
+	<div class="outline" style="flex-grow: 5"></div>
+	<div class="outline" style="flex-grow: 3"></div>
+</div>
+
+<div class="flex-container-round Dodgerblue">
+  <div style="flex-grow: 1"> &nbsp</div>
+</div>
+
+<div class="flex-container-round red">
+  <div style="flex-grow: 1"> &nbsp</div>
+</div>
+
+<div class="flex-container-round thistle">
+  <div style="flex-grow: 1;"> &nbsp</div>
+</div>
+
+<div class="flex-container-round yellow">
+  <div style="flex-grow: 1;"> &nbsp</div>
+</div>
+
+<div class="flex-container-round outline">
+  <div style="flex-grow: 1;"> &nbsp</div>
+</div>
+
+</body>
+</html>

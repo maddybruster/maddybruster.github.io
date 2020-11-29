@@ -1,0 +1,83 @@
+/*this is my stylesheet for 11.4.html*/
+
+body{
+
+  font: 1em / 1.3125em ;
+  letter-spacing: 0.2px;
+  text-rendering: optmizeLegibility;
+  text-rendering: optmizeSpeed;
+  font-kerning: normal;
+  margin: 0.5rem 1rem;
+  overflow:hidden;
+}
+
+p {
+  font-family: 'Helvetica', sans-serif;
+  font-size: 1.2rem;
+  line-height: 1.4rem;
+  margin:0;
+  display:inline-block;
+}
+
+hr{
+  border: 1px solid black;
+  margin-top: 0.5rem;
+
+
+}
+
+
+img.formatted{
+
+  min-height: 600px;
+	max-height: 100vh;
+  left:0;
+
+}
+
+a {
+  text-decoration: none;
+  color:#000;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: #000;
+}
+
+a:visited {
+  text-decoration: none;
+  color:#000;
+}
+
+
+
+/*MEDIA QUERIES*/
+
+@media only screen and (max-device-width: 667px) and (min-device-width: 375px) and (orientation: portrait) {
+
+  .grid, .main-text, body{
+
+  display:grid;
+  grid-template-columns: 1fr;
+  max-width:95%;
+  margin:0;
+
+  }
+
+  .main-bio {
+    margin:20px;
+    max-width:95%;
+  }
+
+  .main-text{
+
+    margin-left:45px;
+  }
+
+h1 {
+  margin:0;
+}
+
+
+}
