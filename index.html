@@ -1,0 +1,85 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>maddybruster.com</title>
+
+  <link rel="stylesheet" type="text/css" href="css/main.css">
+  <script src="assets/main.js"></script>
+</head>
+<body>
+  <div class="header-grid">
+
+  <p>
+    You’re here at maddybruster.com. <br>
+    Maddy Bruster is a graphic designer working toward an autonomous practice. She lives somewhere in Brooklyn, NY. She is always up for conversation and  collaboration. 
+    Please feel free to contact her at her email, <b>maddy.bruster@gmail.com</b>, or find her elsewhere on the internet, at her <a href="https://www.are.na/maddy-bruster" target="blank">are.na</a> or on <a href="https://www.instagram.com/maddybruster/" target="blank">[dubious social network].</a>
+  </p>
+
+  <div style="display:block;"> 
+    <p  class="clock"  id="DigitalCAL" onload="showTime()" ></p>
+    <p class="clock" style="margin-bottom:1rem"  id="DigitalCLOCK" onload="showTime()" ></p>
+
+
+ 
+
+
+  </div>
+
+</div>
+
+<div class="icon"></div>
+
+
+
+<script>
+  function showTime(){
+      var date = new Date();
+      var h = date.getHours();
+      var m = date.getMinutes();
+      var s = date.getSeconds();
+      var session = "AM";
+
+      weekday = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
+      dayOfWeek = weekday[date.getDay()];
+      domEnder = function() { var a = date; if (/1/.test(parseInt((a + "").charAt(0)))) return "th"; a = parseInt((a + "").charAt(1)); return 1 == a ? "st" : 2 == a ? "nd" : 3 == a ? "rd" : "th" }();
+      dayOfMonth = time + ( date.getDate() < 10) ? '0' + date.getDate() : date.getDate() ;
+      months = new Array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
+      curMonth = months[date.getMonth()];
+
+  
+      if(h == 0){
+          h = 12;
+      }
+  
+      if(h > 12){
+          h = h - 12;
+          session = "PM";
+      }
+  
+      h = (h < 10) ? "0" + h : h;
+      m = (m < 10) ? "0" + m : m;
+      s = (s < 10) ? "0" + s : s;
+  
+      var weekdaymonth = dayOfWeek + "," + " " + curMonth + " " + dayOfMonth;
+      var time =   h + ":" + m + ":" + s + " " + session;
+
+      document.getElementById("DigitalCAL").innerText = weekdaymonth;
+      document.getElementById("DigitalCAL").textContent = weekdaymonth;
+
+      document.getElementById("DigitalCLOCK").innerText = time;
+      document.getElementById("DigitalCLOCK").textContent = time;
+  
+      setTimeout(showTime, 1000);
+  
+  }
+  
+  showTime();
+  </script> 
+
+</body>
+</html>
