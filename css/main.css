@@ -394,7 +394,7 @@ jrei  :_           _:
          display:grid;
          grid-template-columns: 5fr 5.5fr;
          grid-column-gap: 1rem;
-         margin: 1.5rem 2rem 0 2rem;
+         margin: 1.5rem 2rem 2rem 2rem;
      }
 
 
@@ -452,10 +452,17 @@ jrei  :_           _:
       .icon{
           
         height: 60vh;
+        width: 30%;
+        margin: auto;
+        
         background-image: url(../images/h-o-u-s-e.png);
         background-repeat: no-repeat;
         background-size: contain;
         background-position: top;
+      }
+
+      .icon:hover{
+        background-image: url(../images/h-o-u-s-e-2.jpg);
       }
 
       a {
