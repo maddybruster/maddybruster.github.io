@@ -399,22 +399,20 @@ jrei  :_           _:
 
 
      p {
-        font-family: Arial, sans-serif;
-        color: #613f00;
-        text-align: left;
-        line-height: 1.4rem;
-        font-size: 1.2rem;
-
-        display: block;
-        margin:0;
-        padding:0;
+      font-family: Arial, sans-serif;
+      color: crimson;
+      text-align: left;
+      line-height: 1.65rem;
+      font-size: 1.4rem;
+      display: block;
+      margin: 0;
+      padding: 0;
      }
 
 
      .clock{
         text-align: right !important;
-        line-height: 1.3rem;
-        font-size: 1.1rem;
+        
         
       }
 
