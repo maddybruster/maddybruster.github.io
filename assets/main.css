@@ -110,6 +110,8 @@ li,
 p,
 ul {
     margin-bottom: 1em;
+    margin-right: 1em;
+    
     
 
 }
@@ -208,6 +210,7 @@ html {
 
 p{
     font-size: 0.9rem;
+    font-family: monospace;
 }
 
 .stained-glass-grid{
@@ -254,6 +257,3 @@ p{
     filter: drop-shadow(0 0 0.5rem rgba(0, 0, 0, 0.296));
 }
 
-.text-align-center {
-    text-align:center;
-}
