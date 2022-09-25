@@ -189,11 +189,7 @@ a.mobile {
     display:inline-block;
    }
 
-   a.desktop::before{
-    content: "📧";
-    display:inline-block;
-    padding-right: 10px;
-   }
+
    
     .grid {
         display: grid;
