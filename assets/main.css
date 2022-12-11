@@ -14,10 +14,16 @@ body {
     padding: 1.25rem;
     height:100vh;
     margin:0;
+    background-image: url(img/innerlife.svg);
+    background-size: 40%;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
+
+
 main {
-    display: block
+    display: block;
 }
 
 a {
@@ -104,8 +110,8 @@ ul li:before {
 }
 
 p, a {
-    font-size: 1.3rem;
-    margin-bottom: 2rem;
+    font-size: 1rem;
+    margin-bottom: 1rem;
 }
 
 small {
@@ -167,13 +173,42 @@ a.mobile {
     display:block;
    }
 
+.ny-ny {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 0.5rem;
+ 
+}
+
+footer{
+    display:flex;
+    flex-direction:row;
+    justify-content: space-between;
+    align-items: end;
+    
+    }
 
 
+ @media(max-width:575px) {
+    body{
+        background-size: 80%;
+    }
 
-@media(min-width:1000px) {
+ }
+
+
+@media(min-width:900px) {
+
+    body{
+        background-size: 40%;
+        background-position: center;
+    }
+
+  
 
     p, a {
-        font-size: 2.25rem;
+        font-size: 2rem;
         color: #000;
     }
 
@@ -188,8 +223,6 @@ a.mobile {
    a.desktop {
     display:inline-block;
    }
-
-
    
     .grid {
         display: grid;
@@ -203,13 +236,20 @@ a.mobile {
         margin-bottom: 0;
     }
 
-    .grid > .main-div{
-        grid-column-end: span 8;
+    .grid > .main-div, .grid > .side-div{
+        grid-column-end: span 7;
     }
 
     .grid > .side-div{
-        grid-column-end: span 4;
+        grid-column-end: span 5;
     }
+
+    .grid > footer{
+        grid-column-end: span 12;
+    }
+
+  
+
 
 
    .side-div, .main-div {
@@ -226,7 +266,6 @@ a.mobile {
     .dot {
         height: 1.25rem;
         width: 1.25rem;
-        margin-left: 4rem;
         margin-right: 10px;
       }
 
@@ -243,10 +282,18 @@ a.mobile {
         margin-bottom:0;
     }
 
+    .ny-ny{
+        margin-left: 4rem;
+    }
+
 }
 
 
 
 .underline {
     text-decoration: underline
+}
+
+.d-inline-flex{
+    display:inline-flex;
 }
