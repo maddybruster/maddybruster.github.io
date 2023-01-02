@@ -122,18 +122,15 @@ small {
 
 a,
 a:visited {
-    text-decoration: none
-}
-
-a,
-a:hover,
-a:visited {
-    color: var(--link-color);
-}
-
-a:hover {
     text-decoration: underline;
 }
+
+
+a:hover
+{
+    text-decoration: none;
+}
+
 
 figcaption {
     margin-top: .3em;
