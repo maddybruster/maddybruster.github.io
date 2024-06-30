@@ -1,5 +1,5 @@
-url: "http://maddybruster.com"
-baseurl: "" # the subpath of your site, e.g. /blog
+url: "http://USERNAME.github.io"
+baseurl: "jekyllproject-main"
 title: maddy bruster
 author:
   name: GitHub User
