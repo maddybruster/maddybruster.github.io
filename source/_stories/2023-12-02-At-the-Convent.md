@@ -1,6 +1,0 @@
----
-title: "At the Convent"
-date: 2023-12-02
----
-
-<p>A friend’s sister is becoming a nun, and he sees her only twice a year, plus occasional handwritten mail exchanged through the convent. Her head is shaved bald and she has no cellphone. On Fridays the nuns observe a day of silence, and the neighborhood guys tease them. Hey sister! Hello! How you doing! A man who has done time cleans his car outside the convent gates, and says he’ll kill anyone who harms the sisters. Inside the convent there’s no need to read the news or own a phone. There are no cars to clean or repair. There are no bare feet on the grass.</p>
