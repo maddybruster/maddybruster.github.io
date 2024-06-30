@@ -1,0 +1,57 @@
+url: "http://maddybruster.com"
+baseurl: "" # the subpath of your site, e.g. /blog
+title: maddy bruster
+author:
+  name: GitHub User
+  email: your-email@domain.com
+
+# Set the source folder
+source: source
+
+include:
+  - _pages
+  - _posts
+  - _stories
+  - _feed
+
+
+sass:
+    sass_dir: _sass
+    style: compressed
+
+# Pagination
+pagination:
+  enabled: true # must be set to true
+  per_page: 10 # number of posts displayed per page
+  permalink: '/page/:num/' # the pagination format
+  sort_reverse: true # show the latest post first
+
+# Jekyll Collections
+collections:
+  pages:
+    output: true # Set to render files in _pages folder
+    permalink: /:title/ # Set the format of the permalink by default 
+  posts:
+    output: true
+    permalink: words/:title
+    future: true
+  stories:
+    permalink: stories/:title
+    future: true
+  feed:
+    
+  
+
+#Plugins
+
+
+
+# Theme-specific settings
+
+# If you want to link only specific pages in your header, use this and add the path to the pages
+# in order as they should show up.
+header_pages:
+  - _pages/feed.html
+  - _pages/words.html
+  - _pages/stories.html
+  - _pages/info.html

@@ -1,0 +1,10 @@
+---
+title: "The Wrong Track"
+date: 2024-05-26
+---
+
+<p>Two events happened on the same day that threw each other into sharp relief.</p>
+
+<p>The first event was a walk with my friend around the lake in our hometown. My friend said that she worried constantly about having to find the ‘real’ thing she was meant to be doing. She said that even though she knows the path to happiness is just choosing something, anything, and doing it, that no matter how hard she tries she can’t help but worry that she’s making the wrong choice. The example she chose was constructing a home composting bin from scratch in her backyard. I said that seemed relatively low-stakes but that I knew what she was driving at. She said anything she chooses to do naturally shuts down other avenues, other possibilities, and she worries that she’s choosing incorrectly and has gotten her life onto the wrong track.</p>
+
+<p>Later that night I went to a small wedding, the first wedding I had ever attended. The bride was an old friend, such an old friend that as I reflected on the many years I had known her, I realized I had forgotten many of the things that had happened to us. As I sat at a table in the back of the room I remembered some sad things that had happened to us, and some happy things. I remembered telling my friend I was moving to another city and watching her burst into tears. I had been shocked because it was a time in my life during which I didn’t think anyone cared about me. At the wedding I sat in my assigned seat in the back and watched the evening unfold, and I felt complete contentment with my role as a spectator. It was a pleasure just to watch a room full of happy people, especially the young people in the bridal party, most of whom had either just gotten married or who were getting married in the next few months. These, I thought, were people who did not walk in circles around the lake fretting about the possibility of making the wrong choice.</p>

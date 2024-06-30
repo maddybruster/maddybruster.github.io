@@ -1,0 +1,18 @@
+current directory: /Users/madeleinebruster/Downloads/jekyllproject-main/vendor/bundle/ruby/3.3.0/gems/racc-1.8.0/ext/racc/cparse
+/opt/homebrew/opt/ruby/bin/ruby extconf.rb
+creating Makefile
+
+current directory: /Users/madeleinebruster/Downloads/jekyllproject-main/vendor/bundle/ruby/3.3.0/gems/racc-1.8.0/ext/racc/cparse
+make DESTDIR\= sitearchdir\=./.gem.20240629-54534-fnerd sitelibdir\=./.gem.20240629-54534-fnerd clean
+
+current directory: /Users/madeleinebruster/Downloads/jekyllproject-main/vendor/bundle/ruby/3.3.0/gems/racc-1.8.0/ext/racc/cparse
+make DESTDIR\= sitearchdir\=./.gem.20240629-54534-fnerd sitelibdir\=./.gem.20240629-54534-fnerd
+compiling cparse.c
+linking shared-object racc/cparse.bundle
+
+current directory: /Users/madeleinebruster/Downloads/jekyllproject-main/vendor/bundle/ruby/3.3.0/gems/racc-1.8.0/ext/racc/cparse
+make DESTDIR\= sitearchdir\=./.gem.20240629-54534-fnerd sitelibdir\=./.gem.20240629-54534-fnerd install
+/usr/bin/install -c -m 0755 cparse.bundle ./.gem.20240629-54534-fnerd/racc
+
+current directory: /Users/madeleinebruster/Downloads/jekyllproject-main/vendor/bundle/ruby/3.3.0/gems/racc-1.8.0/ext/racc/cparse
+make DESTDIR\= sitearchdir\=./.gem.20240629-54534-fnerd sitelibdir\=./.gem.20240629-54534-fnerd clean

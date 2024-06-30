@@ -1,0 +1,18 @@
+current directory: /Users/madeleinebruster/Desktop/web projects/jekyll project/vendor/bundle/ruby/3.3.0/gems/racc-1.7.3/ext/racc/cparse
+/opt/homebrew/opt/ruby/bin/ruby extconf.rb
+creating Makefile
+
+current directory: /Users/madeleinebruster/Desktop/web projects/jekyll project/vendor/bundle/ruby/3.3.0/gems/racc-1.7.3/ext/racc/cparse
+make DESTDIR\= sitearchdir\=./.gem.20240219-49766-mi79v1 sitelibdir\=./.gem.20240219-49766-mi79v1 clean
+
+current directory: /Users/madeleinebruster/Desktop/web projects/jekyll project/vendor/bundle/ruby/3.3.0/gems/racc-1.7.3/ext/racc/cparse
+make DESTDIR\= sitearchdir\=./.gem.20240219-49766-mi79v1 sitelibdir\=./.gem.20240219-49766-mi79v1
+compiling cparse.c
+linking shared-object racc/cparse.bundle
+
+current directory: /Users/madeleinebruster/Desktop/web projects/jekyll project/vendor/bundle/ruby/3.3.0/gems/racc-1.7.3/ext/racc/cparse
+make DESTDIR\= sitearchdir\=./.gem.20240219-49766-mi79v1 sitelibdir\=./.gem.20240219-49766-mi79v1 install
+/usr/bin/install -c -m 0755 cparse.bundle ./.gem.20240219-49766-mi79v1/racc
+
+current directory: /Users/madeleinebruster/Desktop/web projects/jekyll project/vendor/bundle/ruby/3.3.0/gems/racc-1.7.3/ext/racc/cparse
+make DESTDIR\= sitearchdir\=./.gem.20240219-49766-mi79v1 sitelibdir\=./.gem.20240219-49766-mi79v1 clean

@@ -1,0 +1,10 @@
+---
+title: "Two Houses"
+date: 2024-01-18
+---
+
+<p>Think of it like this: two people are each building a house—to make it easy on yourself, you can imagine the houses are side-by-side. One of them works on the house much, much longer than the other, yet his house is much smaller. It’s much smaller, but also much more finely crafted. No detail is unimportant. The other builds the house more quickly and loosely, and it’s larger. It has many more rooms, windows, a patio, and the details are not as important. It’s the existence of the house itself, as a totality, that is significant. There’s landscaping, a yard, a garden, everything is finished only to the degree that it needs to be finished to be pleasant and comfortable, but no more.</p>
+
+<p>And what about these two houses? Nothing about them. These are two other people’s houses—you can’t live there. You have to build your own house, decide how long you want to work on it, find the materials—everything–yourself.</p>
+
+<p>What I’m trying to say is that time is extremely limited. Time is in extremely short supply. You may already be halfway through life’s journey. You may already be halfway through a door you didn’t know was open.</p>

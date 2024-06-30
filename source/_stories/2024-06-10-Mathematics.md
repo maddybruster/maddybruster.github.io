@@ -1,0 +1,6 @@
+---
+title: "Mathematics"
+date: 2024-06-10
+---
+
+<p>I used to go to a school for mathematics and engineering. I sat in a large lecture hall with one hundred other students, most of whom were male. I spent the duration of each lecture teaching myself to write with my left hand, and in this way alone the two hour lectures were bearable. If I had been listening to the math I would have crawled out of my skin. As the lecturer wrote the numbers on the board I would copy them as quickly as I could. After the first few minutes my weak hand would develop a cramp, it became painful to write, and this was even more of a distraction from the lecture. Slowly it grew stronger, and the numbers it wrote grew more and more legible. By the end of the semester it performed at around 60% the speed and accuracy of the right hand. The way the left hand writes is still awkward and jagged, but it is quick and far less painful than it was before. To write with both hands is a skill I acquired for myself. No one can take it away from me except me, for lack of practice. I only wish I had those notebooks full of ugly, twisted numbers from when my left hand was learning to write. I threw them in a dumpster on the last day of class, and I do not remember the mathematics I learned. Only my hand remembers.</p>

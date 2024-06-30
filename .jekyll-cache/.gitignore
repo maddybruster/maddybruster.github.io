@@ -1,0 +1,9 @@
+# ignore everything in this directory
+# Jekyll
+.bundle
+.jekyll-cache/
+.jekyll-metadata
+.sass-cache/
+_site/
+Gemfile.lock
+vendor/

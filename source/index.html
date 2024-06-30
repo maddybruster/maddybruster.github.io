@@ -1,0 +1,41 @@
+---
+layout: default
+
+---
+<div class="content-wrapper col-12 grid column-gap-half ">
+<div class="col-12 col-lg-2 flex flex-col justify-content-between h-100 w-75 w-100-lg">
+
+  
+  <div class="feed-memo mb-3 px-3 py-4">
+   <p class="small font-weight-500 pb-1">landing_gallery</p>
+   <p class="small font-weight-300">commissions and displays a single original work per month. To submit a work or contact landing_gallery, send an email.</p>
+  </div>   
+  
+  <div>
+  <p class="caption small font-weight-300 mb-0"><i>Untitled</i></p>
+  <p class="caption small font-weight-300 pb-2 mb-0">Collage created by the browser while programming this site.</p>
+
+  <p class="small font-weight-500 pb-1 mb-0">June 2024</p>
+  </div>
+
+</div>
+
+
+<div class="home-gallery-container col-12 col-lg-10 flex-col flex-row-lg flex-wrap-lg z-index-n-1 h-100">
+  
+	{% for image in site.static_files %}
+  {% if image.path contains '/_feed/landing_gallery_current/' %}
+
+    
+        <img class="home-gallery m-0 p-0 object-fit-contain" src="{{ image.path | relative_url }}" />    
+        
+        
+
+    {% endif %}
+	{% endfor %}
+ 
+
+</div>
+
+</div>
+

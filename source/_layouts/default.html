@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang='en'>
+{% include head.html %}
+<body>
+  <div class="container wrapper d-flex flex-column h-100 m-0">
+    {% include header.html %}
+    {{ content }}
+
+  </div>
+<script src="{{ base.url | prepend: site.url }}/assets/js/nav.js"></script>
+<script src="{{ base.url | prepend: site.url }}/assets/js/lightbox.js"></script>
+</body>
+</html>

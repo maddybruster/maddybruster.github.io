@@ -1,0 +1,10 @@
+---
+title: "Thin Mint Divorce Story"
+date: 2023-07-18
+---
+
+<p>A couple we know at the tennis club, Janine and Chris, divorced over a box of thin mints. Apocryphally. A tale circulated. Janine had frozen the thin mints, because she liked to nibble on them year-round. Then Chris had gone into the freezer and eaten the remainder of the last box for the year. It was the final straw. Some people told the story in a way that made Janine seem like a shrill bitch, others told it in a way that made Chris seem like a fat pig. To me, they couldn’t have been a more ordinary couple. When I saw them together they looked like a couple of rectangles in polo shirts.</p>
+
+<p>Janine had quite a game and is much in demand at the club as a doubles partner, so she remarried another of the divorcees, Mark, right away. They have a fabulous barbecue every year where they roast a whole pig with pineapple, on a spit in the backyard beside the swimming pool. They have one of the guys from the club come out and spend all day digging the pit and roasting the pig, and at night with everyone there it’s kind of luau themed. They must spend five or ten K on the party every year, but the whole club comes out for it, and now it seems like Janine and Mark have never <i>not</i> been together.</p>
+
+<p>I saw Chris hitting on the ball machine the other day, with one of the pros. He still plays at the club and doesn’t seem humiliated by the divorce, or by the story that still goes around to new members of the club. He doesn’t seem to care that we all know he ate an entire box of thin mints in one sitting. The story may not even be true. His conscience seems clean. But what he did has been set down in the memory of the country club through constant retelling, husbands and wives saying to each other: “Watch it! You never know what’ll make me snap!” And laughing, laughing.</p>
