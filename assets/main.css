@@ -92,9 +92,6 @@ a.special-fish-logo {
     position: absolute;
 }
 
-
-
-
 @media(min-width:768px) {
     .main {
         max-width:60vw;
