@@ -1,0 +1,41 @@
+{{ $allArchivePages := sort (where site.RegularPages "Section" "archive") "Params.year" "desc" }}
+{{ $regularPages := where $allArchivePages "Params.collab" "!=" "Partner & Partners" }}
+{{ $partnerPages := where $allArchivePages "Params.collab" "Partner & Partners" }}
+
+{{ if gt (len $allArchivePages) 0 }}
+    {{ if gt (len $regularPages) 0 }}
+        <div class="archive-list">
+            {{ range $regularPages }}
+                <p class="archive-item mb-0">
+                    {{ if .Params.externallink }}
+                        <a href="{{ .Params.externallink }}">{{ .Title }},</a>
+                    {{ else }}
+                        {{ .Title }},
+                    {{ end }}
+                    {{ with .Params.tagline }}<span class="archive-tagline">{{ . }}</span>{{ end }},
+                    {{ with .Params.year }}<span class="archive-year">{{ . }}</span>{{ end }}
+                </p>
+            {{ end }}
+        </div>
+    {{ end }}
+    
+    {{ if gt (len $partnerPages) 0 }}
+
+        <div class="archive-list mt-4">
+        <p class="mb-2">with Partner & Partners</p>
+            {{ range $partnerPages }}
+                <p class="archive-item mb-0">
+                    {{ if .Params.externallink }}
+                        <a href="{{ .Params.externallink }}">{{ .Title }},</a>
+                    {{ else }}
+                        {{ .Title }},
+                    {{ end }}
+                    {{ with .Params.tagline }}<span class="archive-tagline">{{ . }}</span>{{ end }},
+                    {{ with .Params.year }}<span class="archive-year">{{ . }}</span>{{ end }}
+                </p>
+            {{ end }}
+        </div>
+    {{ end }}
+{{ else }}
+    <p>No archived projects yet.</p>
+{{ end }}

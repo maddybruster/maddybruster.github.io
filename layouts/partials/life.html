@@ -1,0 +1,98 @@
+{{ $feedSection := site.GetPage "section" "life" }}
+<div class="feed-container">
+    <div class="memo flex col-12 col-lg-3 p-0 h-fit-content">
+        <p class="small mb-0 self-center">
+            {{ with $feedSection }}
+                {{ $images := .Resources.ByType "image" }}
+                {{ $latestImage := index $images 0 }}
+                {{ range $images }}
+                    {{ if gt (.Name) ($latestImage.Name) }}
+                        {{ $latestImage = . }}
+                    {{ end }}
+                {{ end }}
+                {{ $filename := $latestImage.Name }}
+                {{ $dateStr := strings.TrimSuffix (path.Ext $filename) $filename }}
+                {{ if strings.Contains $dateStr "-" }}
+                    {{ $parts := strings.Split $dateStr "-" }}
+                    {{ $year := printf "20%s" (index $parts 0) }}
+                    {{ $month := index $parts 1 }}
+                    {{ $day := index $parts 2 }}
+                    {{ $monthMap := dict "01" "January" "02" "February" "03" "March" "04" "April" "05" "May" "06" "June" "07" "July" "08" "August" "09" "September" "10" "October" "11" "November" "12" "December" }}
+                    updated: {{ index $monthMap $month }} {{ $day }}, {{ $year }}
+                {{ else }}
+                    updated: Unknown
+                {{ end }}
+            {{ end }}
+        </p>    
+    </div>
+
+    <div class="gallery gallery-life">
+        <div class="col-12 col-lg-9">
+            <div class="grid-4" id="life-grid">
+                {{ with $feedSection }}
+                    {{ $images := .Resources.ByType "image" }}
+                    {{ range $images }}
+                        <div>
+                            <img class="life-image w-100 aspect-square object-fit-cover" src="{{ .RelPermalink }}" alt="" loading="lazy" />     
+                        </div>
+                    {{ end }}
+                {{ end }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        const grid = document.getElementById('life-grid');
+        const items = Array.from(grid.children);
+        items.reverse();
+        
+        grid.innerHTML = '';
+        items.forEach(item => {
+            grid.appendChild(item);
+        });
+    })();
+
+    // Lightbox functionality
+    window.onload = function() {
+        var imageNodes = document.querySelectorAll(".gallery-life .life-image");
+
+        // set a unique # ID for each image 
+        for (var i = 0; i < imageNodes.length; i++) {  
+            imageNodes[i].setAttribute("id", "life-image-" + i);
+        }
+
+        // on click, open lightbox
+        document.addEventListener("mousedown", event => {
+            // if the modal already exists, do nothing  
+            if (document.body.getElementsByClassName('modal').length > 0) {
+                return;
+            }
+           
+            // else if the modal does not exist yet, open the modal 
+            let elements = document.elementsFromPoint(event.clientX, event.clientY);
+            elements.forEach(function(element) {
+                if (element.classList.contains("life-image")) {
+                    // save the image src as a variable 
+                    var src = element.src;
+
+                    // creating the modal
+                    const modal = document.createElement("div");
+                    modal.setAttribute("class", "modal");
+                    document.body.append(modal);
+                    
+                    // adding image to modal
+                    const newImage = document.createElement("img");
+                    newImage.setAttribute("src", src);
+                    modal.append(newImage);
+
+                    // close function
+                    modal.onclick = () => {
+                        modal.remove();
+                    };
+                }
+            });
+        });
+    };
+</script>

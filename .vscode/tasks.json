@@ -1,0 +1,54 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Rename feed images",
+      "type": "shell",
+      "command": "node",
+      "args": ["rename-feed-images.js"],
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always"
+      },
+      "hide": true
+    },
+    {
+      "label": "Compress feed images",
+      "type": "shell",
+      "command": "node",
+      "args": ["compress-feed-images.js"],
+      "problemMatcher": [],
+      "presentation": {
+        "echo": true,
+        "reveal": "always"
+      },
+      "hide": true
+    },
+    {
+      "label": "hugo build",
+      "type": "shell",
+      "command": "hugo",
+      "args": ["build"],
+      "problemMatcher": [],
+      "dependsOn": ["Rename feed images", "Compress feed images"],
+      "presentation": {
+        "echo": true,
+        "reveal": "always"
+      }
+    },
+    {
+      "label": "hugo server",
+      "type": "shell",
+      "command": "hugo",
+      "args": ["server"],
+      "problemMatcher": [],
+      "dependsOn": ["Rename feed images", "Compress feed images"],
+      "presentation": {
+        "echo": true,
+        "reveal": "always"
+      },
+      "isBackground": true
+    }
+  ]
+}

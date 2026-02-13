@@ -1,0 +1,62 @@
+<nav class="site-nav">
+	<a class="site-title" href="{{ .Site.BaseURL }}">maddy bruster</a>
+	<div class="nav-groups">
+		<div class="nav-controls">
+			<label class="nav-toggle">
+				<input type="checkbox" data-target="view-life" />
+				life
+			</label>
+			<label class="nav-toggle">
+				<input type="checkbox" data-target="view-websites" />
+				websites
+			</label>
+			<label class="nav-toggle">
+				<input type="checkbox" data-target="view-books" />
+				books + print
+			</label>
+			<label class="nav-toggle is-empty">
+				<input type="checkbox" data-target="view-writing" disabled />
+				writing
+			</label>
+		</div>
+		<div class="nav-links">
+			<a class="nav-icon" href="https://www.are.na/maddy-bruster" target="_blank" rel="noopener">
+				<img src="/files/arena.png" alt="Are.na" />
+			</a>
+			<a class="nav-swatch" href="https://special.fish/maddy" target="_blank" rel="noopener" aria-label="Special Fish"></a>
+			<a href="#about">about</a>
+			<a href="mailto:info@maddybruster.com">email me</a>
+		</div>
+	</div>
+</nav>
+
+<script>
+	(function() {
+		const nav = document.querySelector('.site-nav');
+		if (!nav) return;
+		let scrollTimeout;
+		const SCROLL_DELAY = 300;
+
+		function setNavHeight() {
+			document.documentElement.style.setProperty('--nav-height', `${nav.offsetHeight}px`);
+		}
+
+		function hideNav() {
+			nav.classList.add('hide');
+		}
+
+		function showNav() {
+			nav.classList.remove('hide');
+		}
+
+		window.addEventListener('scroll', function() {
+			hideNav();
+			clearTimeout(scrollTimeout);
+			scrollTimeout = setTimeout(showNav, SCROLL_DELAY);
+		});
+
+		window.addEventListener('load', setNavHeight);
+		window.addEventListener('resize', setNavHeight);
+		setNavHeight();
+	})();
+</script>

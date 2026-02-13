@@ -1,0 +1,69 @@
+{{ $captionScratch := newScratch }}
+{{ $captionKeys := slice }}
+{{ range site.RegularPages }}
+    {{ if strings.HasPrefix .File.Dir "websites/captions/" }}
+        {{ $captionScratch.Set .File.BaseFileName .Content }}
+        {{ $captionKeys = $captionKeys | append .File.BaseFileName }}
+    {{ end }}
+{{ end }}
+{{ $projectsSection := site.GetPage "section" "websites" }}
+<div class="gallery gallery-websites">
+    {{ with $projectsSection }}
+        {{ $rootImages := .Resources.ByType "image" }}
+        {{ range $rootImages }}
+            {{ if or (eq (path.Dir .Name) ".") (eq (path.Dir .Name) "") }}
+                <div class="gallery-group">
+                    <div class="gallery-item mb-3">
+                        <img src="{{ .RelPermalink }}" alt="{{ .Title | default (path.Base .Name) }}" />
+                        {{ $imgBase := strings.TrimSuffix (path.Ext .Name) (path.Base .Name) }}
+                        {{ with $captionScratch.Get $imgBase }}
+                            <div class="caption mt-1">{{ . }}</div>
+                        {{ end }}
+                    </div>
+                </div>
+            {{ end }}
+        {{ end }}
+    {{ end }}
+    {{ range where .Site.RegularPages "Section" "websites" }}
+        {{ $pageImages := .Resources.ByType "image" }}
+        {{ if gt (len $pageImages) 0 }}
+            <div class="gallery-group">
+                {{ range $pageImages }}
+                    <div class="gallery-item mb-3">
+                        <img src="{{ .RelPermalink }}" alt="{{ .Title }}" />
+                        {{ $imgBase := strings.TrimSuffix (path.Ext .Name) (path.Base .Name) }}
+                        {{ with $captionScratch.Get $imgBase }}
+                            <div class="caption mt-1">{{ . }}</div>
+                        {{ end }}
+                    </div>
+                {{ end }}
+            </div>
+        {{ end }}
+    {{ end }}
+</div>
+
+<script>
+    (function() {
+        // Randomize image order
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Get all groups and shuffle them
+        const gallery = document.querySelector('.gallery-websites');
+        if (!gallery) return;
+
+        const groups = Array.from(gallery.querySelectorAll('.gallery-group'));
+        const shuffledGroups = shuffleArray(groups);
+
+        // Clear gallery and re-add shuffled images
+        gallery.innerHTML = '';
+        shuffledGroups.forEach(group => {
+            gallery.appendChild(group);
+        });
+    })();
+</script>

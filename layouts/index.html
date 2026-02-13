@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Site.Title }}</title>
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="utility.css">
+</head>
+<body id="top" class="my-2 mx-3">
+<div>{{ partial "nav.html" . }}</div>
+
+<main class="content">
+    <section id="view-default" class="content-section is-active">
+        <div class="fallback-content">
+            <div class="fallback-text">maddybruster.com</div>
+        </div>
+    </section>
+    <section id="view-life" class="content-section">
+        {{ partial "life.html" . }}
+    </section>
+    <section id="view-websites" class="content-section">
+        {{ partial "websites.html" . }}
+    </section>
+    <section id="view-writing" class="content-section">
+        {{ partial "writing.html" . }}
+    </section>
+    <section id="view-books" class="content-section">
+        {{ partial "books.html" . }}
+    </section>
+</main>
+
+<div id="about">{{ partial "footer.html" }}</div>
+
+<div class="site-credits flex flex-col flex-lg-row">
+    <span>© {{ now.Format "2006" }}, maddy bruster &nbsp;design & art direction &nbsp;<span class="location m-0">Brooklyn, NY</span> &nbsp;Last updated: {{ now.Format "January 2, 2006" }}</span>
+    <a href="#top">back to top</a>
+</div>
+
+<script>
+    (function() {
+        const toggles = Array.from(document.querySelectorAll('[data-target]'));
+        const defaultSection = document.getElementById('view-default');
+        
+        // Restore or set default state
+        const savedState = sessionStorage.getItem('navState');
+        if (savedState) {
+            // Restore from session storage
+            const state = JSON.parse(savedState);
+            toggles.forEach(toggle => {
+                const targetId = toggle.getAttribute('data-target');
+                toggle.checked = state[targetId] || false;
+            });
+        } else {
+            // First page load - default to work
+            toggles.forEach(toggle => {
+                toggle.checked = toggle.getAttribute('data-target') === 'view-work';
+            });
+        }
+        
+        const saveState = () => {
+            const state = {};
+            toggles.forEach(toggle => {
+                const targetId = toggle.getAttribute('data-target');
+                state[targetId] = toggle.checked;
+            });
+            sessionStorage.setItem('navState', JSON.stringify(state));
+        };
+        
+        const updateSections = () => {
+            const anyChecked = toggles.some(toggle => toggle.checked);
+            
+            toggles.forEach(toggle => {
+                const targetId = toggle.getAttribute('data-target');
+                const section = document.getElementById(targetId);
+                if (!section) {
+                    return;
+                }
+                section.classList.toggle('is-active', toggle.checked);
+            });
+            
+            if (defaultSection) {
+                defaultSection.classList.toggle('is-active', !anyChecked);
+            }
+        };
+        
+        toggles.forEach(toggle => toggle.addEventListener('change', function(e) {
+            if (this.checked) {
+                toggles.forEach(other => {
+                    if (other !== this) {
+                        other.checked = false;
+                    }
+                });
+            }
+            saveState();
+            updateSections();
+        }));
+        
+        updateSections();
+    })();
+</script>
+</body>
+</html>

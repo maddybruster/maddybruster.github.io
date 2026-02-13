@@ -1,0 +1,388 @@
+/* Reset and default styling */
+html {
+  scroll-behavior: smooth;
+}
+
+:root {
+  --text-color: #333;
+  --text-medium: #444;
+  --text-light: #bbbbbb;
+  --background-color: #fff;
+  --link-hover: #0066cc;
+  --standard-spacer: 1rem;
+    --nav-height: 0px;
+}
+
+@font-face {
+        font-family: "Standard-Book";
+        src: url("/fonts/standard-book.woff") format("woff");
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Standard-Book", sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--background-color);
+}
+
+.site-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: var(--background-color);
+    padding: 0.5rem 1rem;
+    transition: transform 0.5s ease-in-out;
+    transform: translateY(0);
+}
+
+.site-nav.hide {
+    transform: translateY(-100%);
+}
+
+.site-nav a {
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.site-credits a {
+ color: var(--text-light);
+    text-decoration: none;
+}
+
+.site-nav a:hover, .site-credits a:hover {
+    text-decoration: underline;
+}
+
+.nav-groups {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    row-gap: 0.5rem;
+    column-gap: 1rem;
+}
+
+.nav-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nav-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    cursor: pointer;
+}
+
+.nav-toggle.is-empty {
+    color: #ddd;
+}
+
+.nav-links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+}
+
+p.bio {
+    pointer-events: auto;
+        background-color: #f5f5f5;
+    padding: 1rem;
+    line-height: 1.4;
+}
+
+@media (max-width: 640px) {
+    .nav-controls,
+    .nav-links {
+        display: contents;
+    }
+}
+
+@media (min-width: 1024px) {
+    .nav-groups {
+        width: 75vw;
+        margin-left: auto;
+        justify-content: space-between;
+    }
+}
+
+.nav-icon,
+.nav-swatch {
+    display: inline-flex;
+    width: 16px;
+    height: 16px;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-icon img {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+    display: block;
+}
+
+.nav-swatch {
+    background-color: rgb(0, 132, 255) !important;
+}
+
+.nav-swatch:hover {
+    background-color: #000 !important;
+}
+
+.content {
+    padding-top: var(--nav-height);
+}
+
+
+
+.content-section {
+    display: none;
+}
+
+.content-section.is-active {
+    display: block;
+}
+
+.fallback-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 90vh;
+}
+
+.fallback-text {
+    font-size: 5rem;
+    color: #ddd;
+    font-style: italic;
+    transform: rotate(-15deg);
+    user-select: none;
+    overflow-wrap: break-word;
+    line-height: 80%;
+    text-align: center;
+    min-width: 0;
+}
+
+.site-credits {
+    margin-top: 3rem;
+    font-size: 0.85rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+
+.site-credits * {
+    color: var(--text-light);
+}
+
+@media (max-width: 767px) {
+    .fallback-text {
+        font-size: 2.5rem;
+    }
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 0.5em;
+}
+
+p {
+    margin-bottom: 1em;
+}
+
+a{
+    color: var(--text-color);
+    text-decoration: underline;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+button {
+    cursor: pointer;
+    padding: 0.5em 1em;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f5f5f5;
+    font-size: 1em;
+}
+
+button:hover {
+    background-color: #e9e9e9;
+}
+
+.email-button {
+    display: block;
+    width: 100%;
+    padding: 1em;
+    border: 2px solid #000;
+    background-color: #f5f5f5;
+    color: #000;
+    text-decoration: none;
+    text-align: center;
+    font-size: 1em;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    box-shadow: 3px 4px 2px #000;
+}
+
+.email-button:hover {
+    background-color: #000;
+    color: #fff;
+    text-decoration: none;
+    box-shadow: none;
+    transform: translate(1px, 1px);
+}
+
+/* Gallery styling */
+.gallery {
+    width: fit-content;
+    overflow: hidden;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-left: auto;
+    margin-right: 0;
+}
+
+.gallery img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+.gallery .caption {
+    align-self: flex-start;
+    font-size: 13px;
+    line-height: 1.25;
+    color: var(--text-medium);
+    margin-top: 0.5rem;
+}
+
+.gallery .caption p {
+    margin: 0;
+}
+
+.location::before {
+      content: "⋆˚꩜｡";
+      margin-right: calc(0.25* var(--standard-spacer)); /* Replace with your desired emoji */
+    }
+
+.top{
+    top: 0;
+    position: absolute;
+}
+
+.m-0 {
+    margin: 0;
+}
+
+.mb-0 {
+    margin-bottom: 0;
+}
+
+.mb-1 {
+    margin-bottom: calc(0.25* var(--standard-spacer));
+}
+
+.mb-2 {
+    margin-bottom: calc(0.5* var(--standard-spacer));
+}
+
+.gap-1 {
+    gap: var(--standard-spacer);
+}
+
+.gap-4 {
+    gap: calc(4*var(--standard-spacer));
+}
+
+/*spacing css */
+
+.header, .section {
+    margin-bottom: calc(3 * var(--standard-spacer));
+}
+
+
+/* header css*/
+
+.header *:not(:last-child) {
+margin-right: calc(1.5* var(--standard-spacer));
+}
+
+
+/* Feed container */
+.feed-container {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+}
+
+
+
+/* Memo styling */
+.memo {
+    background-color: #eef;
+    color: #b6c1ff;
+    height: 3rem;
+}
+
+.memo * {
+    margin: 0;
+}
+
+
+/* Image modal */
+.modal {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.798);
+    margin-top: -1px;
+    animation: zoom 0.25s;
+    z-index: 100;
+}
+
+@keyframes zoom {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+.modal img {
+    object-fit: contain;
+    max-width: 95vw;
+    max-height: 95vh;
+    width: auto;
+    height: auto;
+    z-index: 2;
+}

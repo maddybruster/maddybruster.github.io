@@ -1,0 +1,14 @@
+# Hugo
+/public/
+/resources/_gen/
+
+# Node
+node_modules/
+package-lock.json
+
+# Image compression tracking
+content/feed/.compression-mark
+
+# OS
+.DS_Store
+Thumbs.db
