@@ -52,10 +52,12 @@
                 toggle.checked = state[targetId] || false;
             });
         } else {
-            // First page load - default to work
-            toggles.forEach(toggle => {
-                toggle.checked = toggle.getAttribute('data-target') === 'view-work';
-            });
+            // First page load - randomly select one enabled section
+            const enabledToggles = toggles.filter(toggle => !toggle.disabled);
+            if (enabledToggles.length > 0) {
+                const randomIndex = Math.floor(Math.random() * enabledToggles.length);
+                enabledToggles[randomIndex].checked = true;
+            }
         }
         
         const saveState = () => {
