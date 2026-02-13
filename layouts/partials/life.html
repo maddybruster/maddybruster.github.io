@@ -31,12 +31,15 @@
             <div class="grid-4" id="life-grid">
                 {{ with $feedSection }}
                     {{ $images := .Resources.ByType "image" }}
-                    {{ range $images }}
-                        <div>
-                            <img class="life-image w-100 aspect-square object-fit-cover" src="{{ .RelPermalink }}" alt="" loading="lazy" />     
+                    {{ range $index, $image := $images }}
+                        <div class="life-grid-item" data-index="{{ $index }}">
+                            <img class="life-image w-100 aspect-square object-fit-cover" src="{{ $image.RelPermalink }}" alt="" loading="lazy" />     
                         </div>
                     {{ end }}
                 {{ end }}
+            </div>
+            <div class="load-more-container" style="text-align: center; margin-top: 2rem;">
+                <button id="load-more-life" class="load-more-btn" style="display: none;">Load More</button>
             </div>
         </div>
     </div>
@@ -45,13 +48,47 @@
 <script>
     (function() {
         const grid = document.getElementById('life-grid');
-        const items = Array.from(grid.children);
+        const items = Array.from(grid.querySelectorAll('.life-grid-item'));
+        const loadMoreBtn = document.getElementById('load-more-life');
+        const ITEMS_PER_PAGE = 20;
+        let currentlyVisible = 0;
+
+        // Reverse items (newest first)
         items.reverse();
-        
         grid.innerHTML = '';
         items.forEach(item => {
             grid.appendChild(item);
         });
+
+        // Initially hide all items
+        items.forEach(item => {
+            item.style.display = 'none';
+        });
+
+        // Function to show more items
+        function showMoreItems() {
+            const end = Math.min(currentlyVisible + ITEMS_PER_PAGE, items.length);
+            for (let i = currentlyVisible; i < end; i++) {
+                items[i].style.display = 'block';
+            }
+            currentlyVisible = end;
+
+            // Hide button if all items are shown
+            if (currentlyVisible >= items.length) {
+                loadMoreBtn.style.display = 'none';
+            }
+        }
+
+        // Show initial batch
+        showMoreItems();
+
+        // Show load more button if there are more items
+        if (currentlyVisible < items.length) {
+            loadMoreBtn.style.display = 'inline-block';
+        }
+
+        // Load more on button click
+        loadMoreBtn.addEventListener('click', showMoreItems);
     })();
 
     // Lightbox functionality

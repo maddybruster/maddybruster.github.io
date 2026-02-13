@@ -231,6 +231,22 @@ button:hover {
     background-color: #e9e9e9;
 }
 
+.load-more-btn {
+    padding: 0.75em 2em;
+    border: 1px solid var(--text-color);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: "Standard-Book", sans-serif;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.load-more-btn:hover {
+    background-color: var(--text-color);
+    color: var(--background-color);
+}
+
 .email-button {
     display: block;
     width: 100%;
