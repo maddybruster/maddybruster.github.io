@@ -33,7 +33,7 @@
                     {{ $images := .Resources.ByType "image" }}
                     {{ range $index, $image := $images }}
                         <div class="life-grid-item" data-index="{{ $index }}">
-                            <img class="life-image w-100 aspect-square object-fit-cover" src="{{ $image.RelPermalink }}" alt="" loading="lazy" />     
+                            {{ partial "responsive-image.html" (dict "image" $image "alt" "" "class" "life-image w-100 aspect-square object-fit-cover" "sizes" "(max-width: 900px) 50vw, 25vw" "loading" "lazy" "attrs" (dict "data-full" $image.RelPermalink)) }}
                         </div>
                     {{ end }}
                 {{ end }}
@@ -112,7 +112,7 @@
             elements.forEach(function(element) {
                 if (element.classList.contains("life-image")) {
                     // save the image src as a variable 
-                    var src = element.src;
+                    var src = element.getAttribute("data-full") || element.src;
 
                     // creating the modal
                     const modal = document.createElement("div");
