@@ -40,6 +40,9 @@
             </div>
         {{ end }}
     {{ end }}
+    <div class="load-more-container" style="text-align: center; margin-top: 2rem;">
+        <button id="load-more-websites" class="load-more-btn" style="display: none;">Load More</button>
+    </div>
 </div>
 
 <script>
@@ -51,6 +54,70 @@
                 [array[i], array[j]] = [array[j], array[i]];
             }
             return array;
+        }
+
+        function hydrateNodes(nodes) {
+            nodes.forEach(node => {
+                const sources = node.querySelectorAll('source[data-srcset]');
+                sources.forEach(source => {
+                    source.setAttribute('srcset', source.getAttribute('data-srcset'));
+                    source.removeAttribute('data-srcset');
+                    if (source.hasAttribute('data-sizes')) {
+                        source.setAttribute('sizes', source.getAttribute('data-sizes'));
+                        source.removeAttribute('data-sizes');
+                    }
+                });
+
+                const imgs = node.querySelectorAll('img[data-src]');
+                imgs.forEach(img => {
+                    img.setAttribute('src', img.getAttribute('data-src'));
+                    img.removeAttribute('data-src');
+                    if (img.hasAttribute('data-srcset')) {
+                        img.setAttribute('srcset', img.getAttribute('data-srcset'));
+                        img.removeAttribute('data-srcset');
+                    }
+                    if (img.hasAttribute('data-sizes')) {
+                        img.setAttribute('sizes', img.getAttribute('data-sizes'));
+                        img.removeAttribute('data-sizes');
+                    }
+                });
+            });
+        }
+
+        function paginateGallery() {
+            const gallery = document.querySelector('.gallery-websites');
+            if (!gallery) return;
+
+            const items = Array.from(gallery.querySelectorAll('.gallery-item'));
+            const loadMoreBtn = document.getElementById('load-more-websites');
+            const ITEMS_PER_PAGE = 20;
+            let currentlyVisible = 0;
+
+            items.forEach(item => {
+                item.style.display = 'none';
+            });
+
+            function showMoreItems() {
+                const end = Math.min(currentlyVisible + ITEMS_PER_PAGE, items.length);
+                const toShow = items.slice(currentlyVisible, end);
+                toShow.forEach(item => {
+                    item.style.display = 'block';
+                });
+                hydrateNodes(toShow);
+                currentlyVisible = end;
+
+                if (currentlyVisible >= items.length) {
+                    loadMoreBtn.style.display = 'none';
+                }
+            }
+
+            showMoreItems();
+
+            if (currentlyVisible < items.length) {
+                loadMoreBtn.style.display = 'inline-block';
+            }
+
+            loadMoreBtn.addEventListener('click', showMoreItems);
         }
 
         // Get all groups and shuffle them
@@ -65,5 +132,7 @@
         shuffledGroups.forEach(group => {
             gallery.appendChild(group);
         });
+
+        paginateGallery();
     })();
 </script>

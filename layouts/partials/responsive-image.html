@@ -13,9 +13,10 @@
     {{- errorf "responsive-image: missing image" -}}
 {{- end -}}
 
-{{- $subtype := $image.MediaType.SubType | lower -}}
+    {{- $subtype := $image.MediaType.SubType | lower -}}
 {{- $isVector := eq $subtype "svg" -}}
 {{- $isGif := eq $subtype "gif" -}}
+    {{- $isPng := eq $subtype "png" -}}
 
 {{- if or $isVector $isGif -}}
     {{- if $defer -}}
@@ -29,7 +30,7 @@
     {{- end -}}
 {{- else -}}
     {{- $origW := $image.Width -}}
-    {{- $widths := slice 400 800 1200 1600 -}}
+    {{- $widths := slice 320 640 960 1280 -}}
     {{- $validWidths := slice -}}
     {{- range $widths -}}
         {{- if le . $origW -}}
@@ -42,21 +43,38 @@
 
     {{- $fallbackSet := slice -}}
     {{- $webpSet := slice -}}
+    {{- $avifSet := slice -}}
     {{- range $validWidths -}}
-        {{- $resized := $image.Resize (printf "%dx" .) -}}
+        {{- $resizedSpec := "" -}}
+        {{- if $isPng -}}
+            {{- $resizedSpec = printf "%dx jpg q80" . -}}
+        {{- else -}}
+            {{- $resizedSpec = printf "%dx q85" . -}}
+        {{- end -}}
+        {{- $resized := $image.Resize $resizedSpec -}}
         {{- $fallbackSet = $fallbackSet | append (printf "%s %dw" $resized.RelPermalink .) -}}
-        {{- $webp := $image.Resize (printf "%dx webp" .) -}}
+        {{- $webp := $image.Resize (printf "%dx webp q75" .) -}}
         {{- $webpSet = $webpSet | append (printf "%s %dw" $webp.RelPermalink .) -}}
+        {{- $avif := $image.Resize (printf "%dx avif q60" .) -}}
+        {{- $avifSet = $avifSet | append (printf "%s %dw" $avif.RelPermalink .) -}}
     {{- end -}}
-    {{- $fallbackSrc := ($image.Resize (printf "%dx" (index $validWidths 0))).RelPermalink -}}
+    {{- $fallbackSrcSpec := "" -}}
+    {{- if $isPng -}}
+        {{- $fallbackSrcSpec = printf "%dx jpg q80" (index $validWidths 0) -}}
+    {{- else -}}
+        {{- $fallbackSrcSpec = printf "%dx q85" (index $validWidths 0) -}}
+    {{- end -}}
+    {{- $fallbackSrc := ($image.Resize $fallbackSrcSpec).RelPermalink -}}
 
 <picture>
     {{- if $defer -}}
+    <source type="image/avif" data-srcset="{{ delimit $avifSet ", " }}" data-sizes="{{ $sizes }}" />
     <source type="image/webp" data-srcset="{{ delimit $webpSet ", " }}" data-sizes="{{ $sizes }}" />
     <img src="{{ $placeholder }}" data-src="{{ $fallbackSrc }}" data-srcset="{{ delimit $fallbackSet ", " }}" data-sizes="{{ $sizes }}" alt="{{ $alt }}" class="{{ $class }}" loading="{{ $loading }}" decoding="{{ $decoding }}" width="{{ $image.Width }}" height="{{ $image.Height }}"
         {{- if $fetchpriority }} fetchpriority="{{ $fetchpriority }}"{{- end -}}
         {{- range $key, $value := $attrs }} {{ $key }}="{{ $value }}"{{- end -}} />
     {{- else -}}
+    <source type="image/avif" srcset="{{ delimit $avifSet ", " }}" sizes="{{ $sizes }}" />
     <source type="image/webp" srcset="{{ delimit $webpSet ", " }}" sizes="{{ $sizes }}" />
     <img src="{{ $fallbackSrc }}" srcset="{{ delimit $fallbackSet ", " }}" sizes="{{ $sizes }}" alt="{{ $alt }}" class="{{ $class }}" loading="{{ $loading }}" decoding="{{ $decoding }}" width="{{ $image.Width }}" height="{{ $image.Height }}"
         {{- if $fetchpriority }} fetchpriority="{{ $fetchpriority }}"{{- end -}}
