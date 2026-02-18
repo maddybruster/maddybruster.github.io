@@ -3,7 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const feedDir = path.join(__dirname, 'content', 'feed');
+const feedDir = path.join(__dirname, 'content', 'life');
 
 // Marker file to track which images have been compressed
 const compressionMarker = path.join(feedDir, '.compression-mark');

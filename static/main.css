@@ -131,6 +131,7 @@ p.bio {
     height: 16px;
     align-items: center;
     justify-content: center;
+    background-color: transparent;
 }
 
 .nav-icon img {
@@ -138,6 +139,15 @@ p.bio {
     height: 16px;
     object-fit: contain;
     display: block;
+    transition: opacity 0.15s ease-in-out;
+}
+
+.nav-icon:hover {
+    background-color: #fff;
+}
+
+.nav-icon:hover img {
+    opacity: 0;
 }
 
 .nav-swatch {
@@ -362,6 +372,13 @@ margin-right: calc(1.5* var(--standard-spacer));
     background-color: #eef;
     color: #b6c1ff;
     height: 3rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+}
+
+.memo.p-0 {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
 }
 
 .memo * {

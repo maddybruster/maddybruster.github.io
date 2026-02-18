@@ -3,13 +3,8 @@
     <div class="memo flex col-12 col-lg-3 p-0 h-fit-content">
         <p class="small mb-0 self-center">
             {{ with $feedSection }}
-                {{ $images := .Resources.ByType "image" }}
+                {{ $images := sort (.Resources.ByType "image") "Name" "desc" }}
                 {{ $latestImage := index $images 0 }}
-                {{ range $images }}
-                    {{ if gt (.Name) ($latestImage.Name) }}
-                        {{ $latestImage = . }}
-                    {{ end }}
-                {{ end }}
                 {{ $filename := $latestImage.Name }}
                 {{ $dateStr := strings.TrimSuffix (path.Ext $filename) $filename }}
                 {{ if strings.Contains $dateStr "-" }}
@@ -30,9 +25,9 @@
         <div class="col-12 col-lg-9">
             <div class="grid-4" id="life-grid">
                 {{ with $feedSection }}
-                    {{ $images := .Resources.ByType "image" }}
+                    {{ $images := sort (.Resources.ByType "image") "Name" "desc" }}
                     {{ range $index, $image := $images }}
-                        <div class="life-grid-item" data-index="{{ $index }}">
+                        <div class="life-grid-item" data-index="{{ $index }}" data-full="{{ $image.RelPermalink }}">
                             {{ partial "responsive-image.html" (dict "image" $image "alt" "" "class" "life-image w-100 aspect-square object-fit-cover" "sizes" "(max-width: 768px) 100vw, 25vw" "loading" "lazy" "attrs" (dict "data-full" $image.RelPermalink) "defer" true) }}
                         </div>
                     {{ end }}
@@ -52,13 +47,6 @@
         const loadMoreBtn = document.getElementById('load-more-life');
         const ITEMS_PER_PAGE = 20;
         let currentlyVisible = 0;
-
-        // Reverse items (newest first)
-        items.reverse();
-        grid.innerHTML = '';
-        items.forEach(item => {
-            grid.appendChild(item);
-        });
 
         // Initially hide all items
         items.forEach(item => {
@@ -112,7 +100,12 @@
             elements.forEach(function(element) {
                 if (element.classList.contains("life-image")) {
                     // save the image src as a variable 
-                    var src = element.getAttribute("data-full") || element.src;
+                    var container = element.closest(".life-grid-item");
+                    var full = element.getAttribute("data-full");
+                    if (!full && container) {
+                        full = container.getAttribute("data-full");
+                    }
+                    var src = full || element.currentSrc || element.src;
 
                     // creating the modal
                     const modal = document.createElement("div");

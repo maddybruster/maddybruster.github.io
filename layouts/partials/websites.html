@@ -14,7 +14,7 @@
             {{ if or (eq (path.Dir .Name) ".") (eq (path.Dir .Name) "") }}
                 <div class="gallery-group">
                     <div class="gallery-item mb-3">
-                        {{ partial "responsive-image.html" (dict "image" . "alt" (.Title | default (path.Base .Name)) "sizes" "(max-width: 1024px) 100vw, 75vw" "loading" "lazy" "defer" true) }}
+                        {{ partial "responsive-image.html" (dict "image" . "alt" (.Title | default (path.Base .Name)) "sizes" "(max-width: 1024px) 100vw, 75vw" "widths" (slice 400 800 1200 1600 2000) "qualityFallback" 90 "qualityWebp" 85 "qualityAvif" 70 "loading" "lazy" "defer" true) }}
                         {{ $imgBase := strings.TrimSuffix (path.Ext .Name) (path.Base .Name) }}
                         {{ with $captionScratch.Get $imgBase }}
                             <div class="caption mt-1">{{ . }}</div>
@@ -30,7 +30,7 @@
             <div class="gallery-group">
                 {{ range $pageImages }}
                     <div class="gallery-item mb-3">
-                        {{ partial "responsive-image.html" (dict "image" . "alt" .Title "sizes" "(max-width: 1024px) 100vw, 75vw" "loading" "lazy" "defer" true) }}
+                        {{ partial "responsive-image.html" (dict "image" . "alt" .Title "sizes" "(max-width: 1024px) 100vw, 75vw" "widths" (slice 400 800 1200 1600 2000) "qualityFallback" 90 "qualityWebp" 85 "qualityAvif" 70 "loading" "lazy" "defer" true) }}
                         {{ $imgBase := strings.TrimSuffix (path.Ext .Name) (path.Base .Name) }}
                         {{ with $captionScratch.Get $imgBase }}
                             <div class="caption mt-1">{{ . }}</div>

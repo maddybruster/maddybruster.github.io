@@ -2,6 +2,10 @@
 {{- $alt := .alt | default "" -}}
 {{- $class := .class | default "" -}}
 {{- $sizes := .sizes | default "100vw" -}}
+{{- $customWidths := .widths | default slice -}}
+{{- $qualityFallback := .qualityFallback | default 85 -}}
+{{- $qualityWebp := .qualityWebp | default 75 -}}
+{{- $qualityAvif := .qualityAvif | default 60 -}}
 {{- $loading := .loading | default "lazy" -}}
 {{- $decoding := .decoding | default "async" -}}
 {{- $fetchpriority := .fetchpriority | default "" -}}
@@ -31,6 +35,9 @@
 {{- else -}}
     {{- $origW := $image.Width -}}
     {{- $widths := slice 320 640 960 1280 -}}
+    {{- if gt (len $customWidths) 0 -}}
+        {{- $widths = $customWidths -}}
+    {{- end -}}
     {{- $validWidths := slice -}}
     {{- range $widths -}}
         {{- if le . $origW -}}
@@ -47,22 +54,22 @@
     {{- range $validWidths -}}
         {{- $resizedSpec := "" -}}
         {{- if $isPng -}}
-            {{- $resizedSpec = printf "%dx jpg q80" . -}}
+            {{- $resizedSpec = printf "%dx jpg q%d" . $qualityFallback -}}
         {{- else -}}
-            {{- $resizedSpec = printf "%dx q85" . -}}
+            {{- $resizedSpec = printf "%dx q%d" . $qualityFallback -}}
         {{- end -}}
         {{- $resized := $image.Resize $resizedSpec -}}
         {{- $fallbackSet = $fallbackSet | append (printf "%s %dw" $resized.RelPermalink .) -}}
-        {{- $webp := $image.Resize (printf "%dx webp q75" .) -}}
+        {{- $webp := $image.Resize (printf "%dx webp q%d" . $qualityWebp) -}}
         {{- $webpSet = $webpSet | append (printf "%s %dw" $webp.RelPermalink .) -}}
-        {{- $avif := $image.Resize (printf "%dx avif q60" .) -}}
+        {{- $avif := $image.Resize (printf "%dx avif q%d" . $qualityAvif) -}}
         {{- $avifSet = $avifSet | append (printf "%s %dw" $avif.RelPermalink .) -}}
     {{- end -}}
     {{- $fallbackSrcSpec := "" -}}
     {{- if $isPng -}}
-        {{- $fallbackSrcSpec = printf "%dx jpg q80" (index $validWidths 0) -}}
+        {{- $fallbackSrcSpec = printf "%dx jpg q%d" (index $validWidths 0) $qualityFallback -}}
     {{- else -}}
-        {{- $fallbackSrcSpec = printf "%dx q85" (index $validWidths 0) -}}
+        {{- $fallbackSrcSpec = printf "%dx q%d" (index $validWidths 0) $qualityFallback -}}
     {{- end -}}
     {{- $fallbackSrc := ($image.Resize $fallbackSrcSpec).RelPermalink -}}
 

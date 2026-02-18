@@ -3,4 +3,5 @@ languageCode = 'en-us'
 title = 'Maddy Bruster'
 
 [outputs]
-  home = ["HTML", "JSON"]
+  home = ["HTML"]
+
