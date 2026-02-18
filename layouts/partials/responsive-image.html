@@ -1,0 +1,66 @@
+{{- $image := .image -}}
+{{- $alt := .alt | default "" -}}
+{{- $class := .class | default "" -}}
+{{- $sizes := .sizes | default "100vw" -}}
+{{- $loading := .loading | default "lazy" -}}
+{{- $decoding := .decoding | default "async" -}}
+{{- $fetchpriority := .fetchpriority | default "" -}}
+{{- $attrs := .attrs | default dict -}}
+{{- $defer := .defer | default false -}}
+{{- $placeholder := "data:image/gif;base64,R0lGODlhAQABAAAAACw=" -}}
+
+{{- if not $image -}}
+    {{- errorf "responsive-image: missing image" -}}
+{{- end -}}
+
+{{- $subtype := $image.MediaType.SubType | lower -}}
+{{- $isVector := eq $subtype "svg" -}}
+{{- $isGif := eq $subtype "gif" -}}
+
+{{- if or $isVector $isGif -}}
+    {{- if $defer -}}
+<img src="{{ $placeholder }}" data-src="{{ $image.RelPermalink }}" alt="{{ $alt }}" class="{{ $class }}" loading="{{ $loading }}" decoding="{{ $decoding }}"
+    {{- if $fetchpriority }} fetchpriority="{{ $fetchpriority }}"{{- end -}}
+    {{- range $key, $value := $attrs }} {{ $key }}="{{ $value }}"{{- end -}} />
+    {{- else -}}
+<img src="{{ $image.RelPermalink }}" alt="{{ $alt }}" class="{{ $class }}" loading="{{ $loading }}" decoding="{{ $decoding }}"
+    {{- if $fetchpriority }} fetchpriority="{{ $fetchpriority }}"{{- end -}}
+    {{- range $key, $value := $attrs }} {{ $key }}="{{ $value }}"{{- end -}} />
+    {{- end -}}
+{{- else -}}
+    {{- $origW := $image.Width -}}
+    {{- $widths := slice 400 800 1200 1600 -}}
+    {{- $validWidths := slice -}}
+    {{- range $widths -}}
+        {{- if le . $origW -}}
+            {{- $validWidths = $validWidths | append . -}}
+        {{- end -}}
+    {{- end -}}
+    {{- if eq (len $validWidths) 0 -}}
+        {{- $validWidths = slice $origW -}}
+    {{- end -}}
+
+    {{- $fallbackSet := slice -}}
+    {{- $webpSet := slice -}}
+    {{- range $validWidths -}}
+        {{- $resized := $image.Resize (printf "%dx" .) -}}
+        {{- $fallbackSet = $fallbackSet | append (printf "%s %dw" $resized.RelPermalink .) -}}
+        {{- $webp := $image.Resize (printf "%dx webp" .) -}}
+        {{- $webpSet = $webpSet | append (printf "%s %dw" $webp.RelPermalink .) -}}
+    {{- end -}}
+    {{- $fallbackSrc := ($image.Resize (printf "%dx" (index $validWidths 0))).RelPermalink -}}
+
+<picture>
+    {{- if $defer -}}
+    <source type="image/webp" data-srcset="{{ delimit $webpSet ", " }}" data-sizes="{{ $sizes }}" />
+    <img src="{{ $placeholder }}" data-src="{{ $fallbackSrc }}" data-srcset="{{ delimit $fallbackSet ", " }}" data-sizes="{{ $sizes }}" alt="{{ $alt }}" class="{{ $class }}" loading="{{ $loading }}" decoding="{{ $decoding }}" width="{{ $image.Width }}" height="{{ $image.Height }}"
+        {{- if $fetchpriority }} fetchpriority="{{ $fetchpriority }}"{{- end -}}
+        {{- range $key, $value := $attrs }} {{ $key }}="{{ $value }}"{{- end -}} />
+    {{- else -}}
+    <source type="image/webp" srcset="{{ delimit $webpSet ", " }}" sizes="{{ $sizes }}" />
+    <img src="{{ $fallbackSrc }}" srcset="{{ delimit $fallbackSet ", " }}" sizes="{{ $sizes }}" alt="{{ $alt }}" class="{{ $class }}" loading="{{ $loading }}" decoding="{{ $decoding }}" width="{{ $image.Width }}" height="{{ $image.Height }}"
+        {{- if $fetchpriority }} fetchpriority="{{ $fetchpriority }}"{{- end -}}
+        {{- range $key, $value := $attrs }} {{ $key }}="{{ $value }}"{{- end -}} />
+    {{- end -}}
+</picture>
+{{- end -}}

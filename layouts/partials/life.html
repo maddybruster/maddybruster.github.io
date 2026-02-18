@@ -33,7 +33,7 @@
                     {{ $images := .Resources.ByType "image" }}
                     {{ range $index, $image := $images }}
                         <div class="life-grid-item" data-index="{{ $index }}">
-                            {{ partial "responsive-image.html" (dict "image" $image "alt" "" "class" "life-image w-100 aspect-square object-fit-cover" "sizes" "(max-width: 900px) 50vw, 25vw" "loading" "lazy" "attrs" (dict "data-full" $image.RelPermalink)) }}
+                            {{ partial "responsive-image.html" (dict "image" $image "alt" "" "class" "life-image w-100 aspect-square object-fit-cover" "sizes" "(max-width: 768px) 100vw, 25vw" "loading" "lazy" "attrs" (dict "data-full" $image.RelPermalink) "defer" true) }}
                         </div>
                     {{ end }}
                 {{ end }}
