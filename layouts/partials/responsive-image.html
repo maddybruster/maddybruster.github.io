@@ -35,11 +35,11 @@
 {{- else -}}
     {{- $origW := 1200 -}}
     {{- $origH := 1200 -}}
-    {{- if $image.Width -}}
-        {{- $origW = $image.Width -}}
+    {{- with $image.Width -}}
+        {{- $origW = . -}}
     {{- end -}}
-    {{- if $image.Height -}}
-        {{- $origH = $image.Height -}}
+    {{- with $image.Height -}}
+        {{- $origH = . -}}
     {{- end -}}
     {{- $widths := slice 320 640 960 1280 -}}
     {{- if gt (len $customWidths) 0 -}}
