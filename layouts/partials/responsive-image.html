@@ -33,7 +33,10 @@
     {{- range $key, $value := $attrs }} {{ $key }}="{{ $value }}"{{- end -}} />
     {{- end -}}
 {{- else -}}
-    {{- $origW := $image.Width -}}
+    {{- $origW := 0 -}}
+    {{- if $image.Width -}}
+        {{- $origW = $image.Width -}}
+    {{- end -}}
     {{- $widths := slice 320 640 960 1280 -}}
     {{- if gt (len $customWidths) 0 -}}
         {{- $widths = $customWidths -}}
@@ -77,13 +80,13 @@
     {{- if $defer -}}
     <source type="image/avif" data-srcset="{{ delimit $avifSet ", " }}" data-sizes="{{ $sizes }}" />
     <source type="image/webp" data-srcset="{{ delimit $webpSet ", " }}" data-sizes="{{ $sizes }}" />
-    <img src="{{ $placeholder }}" data-src="{{ $fallbackSrc }}" data-srcset="{{ delimit $fallbackSet ", " }}" data-sizes="{{ $sizes }}" alt="{{ $alt }}" class="{{ $class }}" loading="{{ $loading }}" decoding="{{ $decoding }}" width="{{ $image.Width }}" height="{{ $image.Height }}"
+    <img src="{{ $placeholder }}" data-src="{{ $fallbackSrc }}" data-srcset="{{ delimit $fallbackSet ", " }}" data-sizes="{{ $sizes }}" alt="{{ $alt }}" class="{{ $class }}" loading="{{ $loading }}" decoding="{{ $decoding }}"{{ if gt $origW 0 }} width="{{ $origW }}"{{ end }}{{ if $image.Height }} height="{{ $image.Height }}"{{ end }}
         {{- if $fetchpriority }} fetchpriority="{{ $fetchpriority }}"{{- end -}}
         {{- range $key, $value := $attrs }} {{ $key }}="{{ $value }}"{{- end -}} />
     {{- else -}}
     <source type="image/avif" srcset="{{ delimit $avifSet ", " }}" sizes="{{ $sizes }}" />
     <source type="image/webp" srcset="{{ delimit $webpSet ", " }}" sizes="{{ $sizes }}" />
-    <img src="{{ $fallbackSrc }}" srcset="{{ delimit $fallbackSet ", " }}" sizes="{{ $sizes }}" alt="{{ $alt }}" class="{{ $class }}" loading="{{ $loading }}" decoding="{{ $decoding }}" width="{{ $image.Width }}" height="{{ $image.Height }}"
+    <img src="{{ $fallbackSrc }}" srcset="{{ delimit $fallbackSet ", " }}" sizes="{{ $sizes }}" alt="{{ $alt }}" class="{{ $class }}" loading="{{ $loading }}" decoding="{{ $decoding }}"{{ if gt $origW 0 }} width="{{ $origW }}"{{ end }}{{ if $image.Height }} height="{{ $image.Height }}"{{ end }}
         {{- if $fetchpriority }} fetchpriority="{{ $fetchpriority }}"{{- end -}}
         {{- range $key, $value := $attrs }} {{ $key }}="{{ $value }}"{{- end -}} />
     {{- end -}}
