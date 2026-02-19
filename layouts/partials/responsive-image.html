@@ -1,11 +1,6 @@
 {{- $image := .image -}}
 {{- $alt := .alt | default "" -}}
 {{- $class := .class | default "" -}}
-{{- $sizes := .sizes | default "100vw" -}}
-{{- $customWidths := .widths | default slice -}}
-{{- $qualityFallback := .qualityFallback | default 85 -}}
-{{- $qualityWebp := .qualityWebp | default 75 -}}
-{{- $qualityAvif := .qualityAvif | default 60 -}}
 {{- $loading := .loading | default "lazy" -}}
 {{- $decoding := .decoding | default "async" -}}
 {{- $fetchpriority := .fetchpriority | default "" -}}
@@ -17,66 +12,12 @@
     {{- errorf "responsive-image: missing image" -}}
 {{- end -}}
 
-    {{- $subtype := $image.MediaType.SubType | lower -}}
-{{- $isVector := eq $subtype "svg" -}}
-{{- $isGif := eq $subtype "gif" -}}
-    {{- $isPng := eq $subtype "png" -}}
-
-{{- if or $isVector $isGif -}}
-    {{- if $defer -}}
+{{- if $defer -}}
 <img src="{{ $placeholder }}" data-src="{{ $image.RelPermalink }}" alt="{{ $alt }}" class="{{ $class }}" loading="{{ $loading }}" decoding="{{ $decoding }}"
     {{- if $fetchpriority }} fetchpriority="{{ $fetchpriority }}"{{- end -}}
     {{- range $key, $value := $attrs }} {{ $key }}="{{ $value }}"{{- end -}} />
-    {{- else -}}
+{{- else -}}
 <img src="{{ $image.RelPermalink }}" alt="{{ $alt }}" class="{{ $class }}" loading="{{ $loading }}" decoding="{{ $decoding }}"
     {{- if $fetchpriority }} fetchpriority="{{ $fetchpriority }}"{{- end -}}
     {{- range $key, $value := $attrs }} {{ $key }}="{{ $value }}"{{- end -}} />
-    {{- end -}}
-{{- else -}}
-    {{- $widths := slice 320 640 960 1280 -}}
-    {{- if gt (len $customWidths) 0 -}}
-        {{- $widths = $customWidths -}}
-    {{- end -}}
-
-    {{- $fallbackSet := slice -}}
-    {{- $webpSet := slice -}}
-    {{- $avifSet := slice -}}
-    {{- range $widths -}}
-        {{- $resizedSpec := "" -}}
-        {{- if $isPng -}}
-            {{- $resizedSpec = printf "%dx jpg q%d" . $qualityFallback -}}
-        {{- else -}}
-            {{- $resizedSpec = printf "%dx q%d" . $qualityFallback -}}
-        {{- end -}}
-        {{- $resized := $image.Resize $resizedSpec -}}
-        {{- $fallbackSet = $fallbackSet | append (printf "%s %dw" $resized.RelPermalink .) -}}
-        {{- $webp := $image.Resize (printf "%dx webp q%d" . $qualityWebp) -}}
-        {{- $webpSet = $webpSet | append (printf "%s %dw" $webp.RelPermalink .) -}}
-        {{- $avif := $image.Resize (printf "%dx avif q%d" . $qualityAvif) -}}
-        {{- $avifSet = $avifSet | append (printf "%s %dw" $avif.RelPermalink .) -}}
-    {{- end -}}
-    {{- $firstWidth := index $widths 0 -}}
-    {{- $fallbackSrcSpec := "" -}}
-    {{- if $isPng -}}
-        {{- $fallbackSrcSpec = printf "%dx jpg q%d" $firstWidth $qualityFallback -}}
-    {{- else -}}
-        {{- $fallbackSrcSpec = printf "%dx q%d" $firstWidth $qualityFallback -}}
-    {{- end -}}
-    {{- $fallbackSrc := ($image.Resize $fallbackSrcSpec).RelPermalink -}}
-
-<picture>
-    {{- if $defer -}}
-    <source type="image/avif" data-srcset="{{ delimit $avifSet ", " }}" data-sizes="{{ $sizes }}" />
-    <source type="image/webp" data-srcset="{{ delimit $webpSet ", " }}" data-sizes="{{ $sizes }}" />
-    <img src="{{ $placeholder }}" data-src="{{ $fallbackSrc }}" data-srcset="{{ delimit $fallbackSet ", " }}" data-sizes="{{ $sizes }}" alt="{{ $alt }}" class="{{ $class }}" loading="{{ $loading }}" decoding="{{ $decoding }}"
-        {{- if $fetchpriority }} fetchpriority="{{ $fetchpriority }}"{{- end -}}
-        {{- range $key, $value := $attrs }} {{ $key }}="{{ $value }}"{{- end -}} />
-    {{- else -}}
-    <source type="image/avif" srcset="{{ delimit $avifSet ", " }}" sizes="{{ $sizes }}" />
-    <source type="image/webp" srcset="{{ delimit $webpSet ", " }}" sizes="{{ $sizes }}" />
-    <img src="{{ $fallbackSrc }}" srcset="{{ delimit $fallbackSet ", " }}" sizes="{{ $sizes }}" alt="{{ $alt }}" class="{{ $class }}" loading="{{ $loading }}" decoding="{{ $decoding }}"
-        {{- if $fetchpriority }} fetchpriority="{{ $fetchpriority }}"{{- end -}}
-        {{- range $key, $value := $attrs }} {{ $key }}="{{ $value }}"{{- end -}} />
-    {{- end -}}
-</picture>
 {{- end -}}
