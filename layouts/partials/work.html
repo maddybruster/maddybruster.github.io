@@ -1,0 +1,116 @@
+{{ $projectsSection := site.GetPage "section" "work" }}
+<div class="gallery gallery-work">
+    {{ with $projectsSection }}
+        {{ $rootImages := .Resources.ByType "image" }}
+        {{ range $rootImages }}
+            {{ if or (eq (path.Dir .Name) ".") (eq (path.Dir .Name) "") }}
+                <div class="gallery-group">
+                    <div class="gallery-item mb-3">
+                        {{ partial "responsive-image.html" (dict "image" . "alt" (.Title | default (path.Base .Name)) "sizes" "(max-width: 1024px) 100vw, 75vw" "widths" (slice 400 800 1200 1600 2000) "qualityFallback" 90 "qualityWebp" 85 "qualityAvif" 70 "loading" "lazy" "defer" true) }}
+                    </div>
+                </div>
+            {{ end }}
+        {{ end }}
+    {{ end }}
+    {{ range where .Site.RegularPages "Section" "work" }}
+        {{ $pageImages := .Resources.ByType "image" }}
+        {{ if gt (len $pageImages) 0 }}
+            <div class="gallery-group{{ if .Params.externallink }} has-link{{ end }}">
+                <div class="gallery-images">
+                    {{ range $pageImages }}
+                        <div class="gallery-item mb-3">
+                            {{ partial "responsive-image.html" (dict "image" . "alt" .Title "sizes" "(max-width: 1024px) 100vw, 75vw" "widths" (slice 400 800 1200 1600 2000) "qualityFallback" 90 "qualityWebp" 85 "qualityAvif" 70 "loading" "lazy" "defer" true) }}
+                        </div>
+                    {{ end }}
+                </div>
+                {{ with .Content }}
+                    <div class="caption caption-hover mt-1">{{ . }}</div>
+                {{ end }}
+            </div>
+        {{ end }}
+    {{ end }}
+</div>
+
+<script>
+    (function() {
+        // Sort image order by filename
+        function naturalSort(a, b) {
+            // Extract filename/dirname from the image element
+            const imgA = a.querySelector('img');
+            const imgB = b.querySelector('img');
+            const srcA = imgA ? (imgA.getAttribute('data-src') || imgA.getAttribute('src') || '') : '';
+            const srcB = imgB ? (imgB.getAttribute('data-src') || imgB.getAttribute('src') || '') : '';
+            
+            // Extract the key for sorting - either the directory name or the filename
+            const keyA = extractSortKey(srcA);
+            const keyB = extractSortKey(srcB);
+            
+            // Natural sort in reverse order (highest numbers first)
+            return keyB.localeCompare(keyA, undefined, { numeric: true, sensitivity: 'base' });
+        }
+
+        function extractSortKey(src) {
+            // Remove the base URL and get the path
+            const path = src.split('/').filter(p => p && !p.startsWith('http'));
+            
+            if (path.length <= 2) {
+                // Root level image or near root - use the filename
+                return path[path.length - 1];
+            } else {
+                // Image in a subdirectory (e.g., pw-books/image.png) - use the directory name
+                return path[path.length - 2];
+            }
+        }
+
+        function sortArray(array) {
+            return array.sort(naturalSort);
+        }
+
+        function hydrateNodes(nodes) {
+            nodes.forEach(node => {
+                const sources = node.querySelectorAll('source[data-srcset]');
+                sources.forEach(source => {
+                    source.setAttribute('srcset', source.getAttribute('data-srcset'));
+                    source.removeAttribute('data-srcset');
+                    if (source.hasAttribute('data-sizes')) {
+                        source.setAttribute('sizes', source.getAttribute('data-sizes'));
+                        source.removeAttribute('data-sizes');
+                    }
+                });
+
+                const imgs = node.querySelectorAll('img[data-src]');
+                imgs.forEach(img => {
+                    img.setAttribute('src', img.getAttribute('data-src'));
+                    img.removeAttribute('data-src');
+                    if (img.hasAttribute('data-srcset')) {
+                        img.setAttribute('srcset', img.getAttribute('data-srcset'));
+                        img.removeAttribute('data-srcset');
+                    }
+                    if (img.hasAttribute('data-sizes')) {
+                        img.setAttribute('sizes', img.getAttribute('data-sizes'));
+                        img.removeAttribute('data-sizes');
+                    }
+                });
+            });
+        }
+
+
+
+        // Get all groups and sort them by filename
+        const gallery = document.querySelector('.gallery-work');
+        if (!gallery) return;
+
+        const groups = Array.from(gallery.querySelectorAll('.gallery-group'));
+        const sortedGroups = sortArray(groups);
+
+        // Clear gallery and re-add sorted images
+        gallery.innerHTML = '';
+        sortedGroups.forEach(group => {
+            gallery.appendChild(group);
+        });
+
+        // Hydrate all images
+        const allItems = Array.from(gallery.querySelectorAll('.gallery-item'));
+        hydrateNodes(allItems);
+    })();
+</script>
