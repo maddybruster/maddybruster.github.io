@@ -14,11 +14,19 @@ html {
 }
 
 @font-face {
-        font-family: "Standard-Book";
-        src: url("/fonts/standard-book.woff") format("woff");
-        font-weight: 400;
-        font-style: normal;
-        font-display: swap;
+    font-family: "Suisse Intl";
+    src: url("/fonts/SuisseIntl-Regular.woff") format("woff");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "Suisse Intl";
+    src: url("/fonts/SuisseIntl-RegularItalic.woff") format("woff");
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
 }
 
 * {
@@ -28,7 +36,7 @@ html {
 }
 
 body {
-    font-family: "Standard-Book", sans-serif;
+    font-family: "Suisse Intl", sans-serif;
     line-height: 1.6;
     color: var(--text-color);
     background-color: var(--background-color);
@@ -71,15 +79,12 @@ body {
 
 .nav-groups {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
-    row-gap: 0.5rem;
-    column-gap: 1rem;
+    gap: 1rem;
 }
 
 .nav-controls {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
     gap: 1rem;
 }
@@ -97,7 +102,6 @@ body {
 
 .nav-links {
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
     gap: 1rem;
 }
@@ -120,7 +124,7 @@ p.bio {
     .nav-groups {
         width: 75vw;
         margin-left: auto;
-        justify-content: space-between;
+       justify-content: flex-end;
     }
 }
 
@@ -298,16 +302,63 @@ button:hover {
     display: block;
 }
 
-.gallery .caption {
+.gallery .caption  {
     align-self: flex-start;
-    font-size: 13px;
+    font-size: 15px;
     line-height: 1.25;
-    color: var(--text-medium);
-    margin-top: 0.5rem;
+    margin-top: 0;
 }
 
 .gallery .caption p {
     margin: 0;
+}
+
+
+/* Work section with overlaid captions */
+.gallery-group {
+    position: relative;
+}
+
+.gallery-images {
+    position: relative;
+}
+
+/* Captions that stick to bottom of screen on hover */
+.caption-hover {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: var(--space-4);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 100;
+    max-height: 20vh;
+    overflow-y: auto;
+}
+
+.gallery-group:hover .caption-hover {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Mobile: captions appear below images instead of fixed to bottom */
+@media (max-width: 768px) {
+    .caption-hover {
+        position: static;
+        opacity: 1;
+        pointer-events: auto;
+        background-color: transparent;
+        padding: var(--space-2) 0;
+        max-height: none;
+        margin-top: var(--space-2);
+    }
+    
+    .gallery-group:hover .caption-hover {
+        opacity: 1;
+    }
 }
 
 .location::before {
@@ -418,4 +469,27 @@ margin-right: calc(1.5* var(--standard-spacer));
     width: auto;
     height: auto;
     z-index: 2;
+}
+
+/* Writing section */
+.gallery-writing {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    align-items: flex-start;
+}
+
+.writing-content {
+    width: 100%;
+    min-height: 90vh;
+}
+
+.writing-content p {
+    margin-top: var(--space-3);
+
+}
+
+.writing-divider {
+    border: none;
+    border-top: 1px solid var(--text-color);
 }
