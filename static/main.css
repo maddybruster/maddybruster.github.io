@@ -166,8 +166,6 @@ p.bio {
     padding-top: var(--nav-height);
 }
 
-
-
 .content-section {
     display: none;
 }
@@ -203,6 +201,10 @@ p.bio {
     align-items: center;
     gap: 1rem;
 }
+
+ .header, .section {
+    margin-bottom: calc(1.5*var(--standard-spacer));
+    }
 
 
 .site-credits * {
@@ -279,6 +281,15 @@ button:hover {
     text-decoration: none;
     box-shadow: none;
     transform: translate(1px, 1px);
+}
+
+details.accordion:hover {
+  cursor: pointer; /* Changes the cursor to a hand icon */
+  color: var(--text-light);
+}
+
+details.accordion p, details.accordion p:hover {
+  color: var(--text-color) !important;
 }
 
 /* Gallery styling */
@@ -391,13 +402,6 @@ button:hover {
 .gap-4 {
     gap: calc(4*var(--standard-spacer));
 }
-
-/*spacing css */
-
-.header, .section {
-    margin-bottom: calc(3 * var(--standard-spacer));
-}
-
 
 /* header css*/
 

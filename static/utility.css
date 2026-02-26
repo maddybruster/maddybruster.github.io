@@ -352,6 +352,17 @@
     width: 80%;
     align-self: flex-start;
     }
+
+    .nav-groups {
+    flex-wrap: wrap;
+    row-gap: 0;
+    column-gap: 0.75rem;
+    }
+
+    .site-nav{
+        gap: 0.5rem;
+
+    }
 }
 
 
@@ -379,10 +390,6 @@
 
     .gap-1-lg {
     gap: var(--standard-spacer);
-    }
-
-    .header, .section {
-    margin-bottom: calc(1.5*var(--standard-spacer));
     }
 }
 
