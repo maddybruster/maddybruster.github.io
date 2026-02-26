@@ -51,6 +51,14 @@
 			scrollTimeout = setTimeout(showNav, SCROLL_DELAY);
 		});
 
+		// Scroll to top when clicking view toggles
+		const viewToggles = document.querySelectorAll('.nav-toggle input[type="checkbox"]');
+		viewToggles.forEach(toggle => {
+			toggle.addEventListener('change', function() {
+				window.scrollTo({ top: 0, behavior: 'smooth' });
+			});
+		});
+
 		window.addEventListener('load', setNavHeight);
 		window.addEventListener('resize', setNavHeight);
 		setNavHeight();
