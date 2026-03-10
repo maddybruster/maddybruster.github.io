@@ -112,5 +112,22 @@
         // Hydrate all images
         const allItems = Array.from(gallery.querySelectorAll('.gallery-item'));
         hydrateNodes(allItems);
+
+        function initCarousels() {
+            const carouselContainers = Array.from(gallery.querySelectorAll('.gallery-images'));
+            carouselContainers.forEach(function(container) {
+                const items = Array.from(container.querySelectorAll('.gallery-item'));
+                if (items.length === 0) return;
+                items[0].classList.add('is-active');
+                if (items.length <= 1) return;
+                let currentIndex = 0;
+                setInterval(function() {
+                    items[currentIndex].classList.remove('is-active');
+                    currentIndex = (currentIndex + 1) % items.length;
+                    items[currentIndex].classList.add('is-active');
+                }, 3000);
+            });
+        }
+        initCarousels();
     })();
 </script>

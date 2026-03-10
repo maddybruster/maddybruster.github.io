@@ -302,6 +302,7 @@ details.accordion p, details.accordion p:hover {
     align-items: flex-end;
     margin-left: auto;
     margin-right: 0;
+    gap: var(--space-3);
 }
 
 .gallery img {
@@ -329,6 +330,20 @@ details.accordion p, details.accordion p:hover {
 
 .gallery-images {
     position: relative;
+    display: grid;
+}
+
+.gallery-images .gallery-item {
+    grid-area: 1 / 1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    margin-bottom: 0;
+    pointer-events: none;
+}
+
+.gallery-images .gallery-item.is-active {
+    opacity: 1;
+    pointer-events: auto;
 }
 
 /* Captions that stick to bottom of screen on hover */
