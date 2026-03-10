@@ -346,7 +346,7 @@ details.accordion p, details.accordion p:hover {
     pointer-events: auto;
 }
 
-/* Captions that stick to bottom of screen on hover */
+/* Captions: fixed to bottom, shown on click */
 .caption-hover {
     position: fixed;
     bottom: 0;
@@ -362,9 +362,25 @@ details.accordion p, details.accordion p:hover {
     overflow-y: auto;
 }
 
-.gallery-group:hover .caption-hover {
+.caption-hover.is-visible {
     opacity: 1;
     pointer-events: auto;
+}
+
+.caption p:last-of-type {
+    display: inline;
+}
+
+.external-link {
+    display: inline-block;
+    background-color: #ccff00;
+    color: #000;
+    text-decoration: none;
+    padding: 0 0.25em;
+}
+
+.external-link:hover {
+  background-color: var(--background-color);
 }
 
 /* Mobile: captions appear below images instead of fixed to bottom */
@@ -379,9 +395,6 @@ details.accordion p, details.accordion p:hover {
         margin-top: var(--space-2);
     }
     
-    .gallery-group:hover .caption-hover {
-        opacity: 1;
-    }
 }
 
 .location::before {

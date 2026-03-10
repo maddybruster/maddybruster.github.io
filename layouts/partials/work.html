@@ -23,8 +23,11 @@
                         </div>
                     {{ end }}
                 </div>
-                {{ with .Content }}
-                    <div class="caption caption-hover mt-1">{{ . }}</div>
+                {{ if or .Content .Params.externallink }}
+                    <div class="caption caption-hover mt-1">
+                        {{ with .Content }}{{ . }}{{ end }}
+                        {{ with .Params.externallink }} <a href="{{ . }}" target="_blank" rel="noopener noreferrer" class="external-link">View site &#8599;</a>{{ end }}
+                    </div>
                 {{ end }}
             </div>
         {{ end }}
@@ -129,5 +132,32 @@
             });
         }
         initCarousels();
+
+        let activeGroup = null;
+
+        function hideCaption(group) {
+            var caption = group.querySelector('.caption-hover');
+            if (caption) caption.classList.remove('is-visible');
+            if (activeGroup === group) activeGroup = null;
+        }
+
+        gallery.querySelectorAll('.gallery-group').forEach(function(group) {
+            group.addEventListener('click', function() {
+                var caption = group.querySelector('.caption-hover');
+                if (!caption) return;
+                if (activeGroup && activeGroup !== group) hideCaption(activeGroup);
+                caption.classList.toggle('is-visible');
+                activeGroup = caption.classList.contains('is-visible') ? group : null;
+            });
+        });
+
+        var scrollObserver = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.intersectionRatio === 0 && entry.target === activeGroup) {
+                    hideCaption(entry.target);
+                }
+            });
+        }, { threshold: 0 });
+        gallery.querySelectorAll('.gallery-group').forEach(function(group) { scrollObserver.observe(group); });
     })();
 </script>
