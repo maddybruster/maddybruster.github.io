@@ -401,11 +401,14 @@ details.accordion p, details.accordion p:hover {
     }
 
     .gallery-images .gallery-item {
-        height: 75vh;
+        height: auto;
+        width: 100%;
     }
 
     .gallery-images .gallery-item img {
-        max-width: 100vw;
+        width: 100%;
+        height: auto;
+        max-width: none;
     }
 
     .slider-caption {
