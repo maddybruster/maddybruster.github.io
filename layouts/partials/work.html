@@ -16,18 +16,34 @@
         {{ $pageImages := .Resources.ByType "image" }}
         {{ if gt (len $pageImages) 0 }}
             <div class="gallery-group{{ if .Params.externallink }} has-link{{ end }}">
-                <div class="gallery-images">
-                    {{ range $pageImages }}
-                        <div class="gallery-item mb-3">
-                            {{ partial "responsive-image.html" (dict "image" . "alt" .Title "sizes" "(max-width: 1024px) 100vw, 75vw" "widths" (slice 400 800 1200 1600 2000) "qualityFallback" 90 "qualityWebp" 85 "qualityAvif" 70 "loading" "lazy" "defer" true) }}
-                        </div>
+                <div class="gallery-images{{ if eq (len $pageImages) 1 }} gallery-images--single{{ end }}">
+                    <div class="slider-track">
+                        {{ range $pageImages }}
+                            <div class="gallery-item">
+                                {{ partial "responsive-image.html" (dict "image" . "alt" .Title "sizes" "(max-width: 1024px) 100vw, 75vw" "widths" (slice 400 800 1200 1600 2000) "qualityFallback" 90 "qualityWebp" 85 "qualityAvif" 70 "loading" "lazy" "defer" true) }}
+                            </div>
+                        {{ end }}
+                    </div>
+                </div>
+                {{ if or .Title (gt (len $pageImages) 1) }}
+                <div class="slider-nav">
+                    {{- $parts := slice .Title -}}
+                    {{- with .Params.siteurl }}{{- $parts = append . $parts -}}{{- end -}}
+                    {{- with .Params.format }}{{- $parts = append . $parts -}}{{- end -}}
+                    {{- with .Params.year }}{{- $parts = append (printf "%v" .) $parts -}}{{- end -}}
+                    {{- with .Params.collaborator }}{{- $parts = append . $parts -}}{{- end -}}
+                    <div class="slider-caption">
+                        <span>{{ delimit $parts ", " }}</span>
+                        <button class="slider-btn caption-toggle">+</button>
+                    </div>
+                    {{ if gt (len $pageImages) 1 }}
+                    <div class="slider-controls">
+                        <button class="slider-btn slider-prev" aria-label="Previous">←</button>
+                        <span class="slider-counter">1 / {{ len $pageImages }}</span>
+                        <button class="slider-btn slider-next" aria-label="Next">→</button>
+                    </div>
                     {{ end }}
                 </div>
-                {{ if or .Content .Params.externallink }}
-                    <div class="caption caption-hover mt-1">
-                        {{ with .Content }}{{ . }}{{ end }}
-                        {{ with .Params.externallink }} <a href="{{ . }}" target="_blank" rel="noopener noreferrer" class="external-link">View site &#8599;</a>{{ end }}
-                    </div>
                 {{ end }}
             </div>
         {{ end }}
@@ -116,48 +132,64 @@
         const allItems = Array.from(gallery.querySelectorAll('.gallery-item'));
         hydrateNodes(allItems);
 
-        function initCarousels() {
-            const carouselContainers = Array.from(gallery.querySelectorAll('.gallery-images'));
-            carouselContainers.forEach(function(container) {
+        function initSliders() {
+            const sliderContainers = Array.from(gallery.querySelectorAll('.gallery-images'));
+            sliderContainers.forEach(function(container) {
+                const track = container.querySelector('.slider-track');
                 const items = Array.from(container.querySelectorAll('.gallery-item'));
-                if (items.length === 0) return;
-                items[0].classList.add('is-active');
-                if (items.length <= 1) return;
+                if (!track || items.length <= 1) return;
+
+                const group = container.closest('.gallery-group');
+                const prevBtn = group.querySelector('.slider-prev');
+                const nextBtn = group.querySelector('.slider-next');
+                const counter = group.querySelector('.slider-counter');
                 let currentIndex = 0;
-                setInterval(function() {
-                    items[currentIndex].classList.remove('is-active');
-                    currentIndex = (currentIndex + 1) % items.length;
-                    items[currentIndex].classList.add('is-active');
-                }, 3000);
-            });
-        }
-        initCarousels();
 
-        let activeGroup = null;
-
-        function hideCaption(group) {
-            var caption = group.querySelector('.caption-hover');
-            if (caption) caption.classList.remove('is-visible');
-            if (activeGroup === group) activeGroup = null;
-        }
-
-        gallery.querySelectorAll('.gallery-group').forEach(function(group) {
-            group.addEventListener('click', function() {
-                var caption = group.querySelector('.caption-hover');
-                if (!caption) return;
-                if (activeGroup && activeGroup !== group) hideCaption(activeGroup);
-                caption.classList.toggle('is-visible');
-                activeGroup = caption.classList.contains('is-visible') ? group : null;
-            });
-        });
-
-        var scrollObserver = new IntersectionObserver(function(entries) {
-            entries.forEach(function(entry) {
-                if (entry.intersectionRatio === 0 && entry.target === activeGroup) {
-                    hideCaption(entry.target);
+                function updateNav() {
+                    if (counter) counter.textContent = (currentIndex + 1) + ' / ' + items.length;
+                    if (prevBtn) prevBtn.disabled = currentIndex === 0;
+                    if (nextBtn) nextBtn.disabled = currentIndex === items.length - 1;
                 }
+
+                function goTo(index) {
+                    currentIndex = index;
+                    container.scrollTo({ left: items[currentIndex].offsetLeft, behavior: 'smooth' });
+                    updateNav();
+                }
+
+                if (prevBtn) prevBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (currentIndex > 0) goTo(currentIndex - 1);
+                });
+
+                if (nextBtn) nextBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    if (currentIndex < items.length - 1) goTo(currentIndex + 1);
+                });
+
+                var scrollTimer;
+                container.addEventListener('scroll', function() {
+                    clearTimeout(scrollTimer);
+                    scrollTimer = setTimeout(function() {
+                        var scrollLeft = container.scrollLeft;
+                        var closest = 0;
+                        var minDist = Infinity;
+                        items.forEach(function(item, i) {
+                            var dist = Math.abs(item.offsetLeft - scrollLeft);
+                            if (dist < minDist) { minDist = dist; closest = i; }
+                        });
+                        if (closest !== currentIndex) {
+                            currentIndex = closest;
+                            updateNav();
+                        }
+                    }, 100);
+                });
+
+                updateNav();
             });
-        }, { threshold: 0 });
-        gallery.querySelectorAll('.gallery-group').forEach(function(group) { scrollObserver.observe(group); });
+        }
+        initSliders();
+
+        // captions disabled temporarily
     })();
 </script>

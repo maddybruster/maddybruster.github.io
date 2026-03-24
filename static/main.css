@@ -13,6 +13,13 @@ html {
     --nav-height: 0px;
 }
 
+/* Color utility classes */
+.text-color        { color: var(--text-color); }
+.text-medium       { color: var(--text-medium); }
+.text-light        { color: var(--text-light); }
+.text-link-hover   { color: var(--link-hover); }
+.bg-background     { background-color: var(--background-color); }
+
 @font-face {
     font-family: "Suisse Intl";
     src: url("/fonts/SuisseIntl-Regular.woff") format("woff");
@@ -37,6 +44,7 @@ html {
 
 body {
     font-family: "Suisse Intl", sans-serif;
+    font-size: 0.9rem;
     line-height: 1.6;
     color: var(--text-color);
     background-color: var(--background-color);
@@ -57,6 +65,7 @@ body {
     padding: 0.5rem 1rem;
     transition: transform 0.5s ease-in-out;
     transform: translateY(0);
+    font-size: 0.9rem;
 }
 
 .site-nav.hide {
@@ -155,11 +164,11 @@ p.bio {
 }
 
 .nav-swatch {
-    background-color: rgb(0, 132, 255) !important;
+   background-color: #000 !important; 
 }
 
 .nav-swatch:hover {
-    background-color: #000 !important;
+    background-color: rgb(0, 132, 255) !important;
 }
 
 .content {
@@ -265,27 +274,48 @@ button:hover {
 .email-button {
     display: block;
     width: 100%;
-    padding: 1em;
-    border: 1px solid #000;
+    padding: 4px 10px 4px 9px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(233, 233, 233) rgba(0, 0, 0, 0.35) rgba(0, 0, 0, 0.35) rgb(233, 233, 233);
     color: #000;
     text-decoration: none;
     text-align: center;
     font-size: 1em;
     cursor: pointer;
     margin-bottom: 1rem;
+    display: inline;
 }
 
 .email-button:hover {
-    background-color: #000;
-    color: #fff;
+    background-color: yellow;
     text-decoration: none;
     box-shadow: none;
     transform: translate(1px, 1px);
 }
 
-details.accordion:hover {
-  cursor: pointer; /* Changes the cursor to a hand icon */
-  color: var(--text-light);
+details.accordion summary {
+    list-style: none;
+    cursor: pointer;
+    color: var(--text-light);
+    transition: color 0.2s;
+}
+
+details.accordion summary::-webkit-details-marker {
+    display: none;
+}
+
+details.accordion summary::before {
+    content: "+ ";
+}
+
+details[open].accordion summary::before {
+    content: "− ";
+}
+
+details.accordion summary:hover {
+    color: var(--text-color);
+    background-color: #e9e9e9;
 }
 
 details.accordion p, details.accordion p:hover {
@@ -330,20 +360,109 @@ details.accordion p, details.accordion p:hover {
 
 .gallery-images {
     position: relative;
-    display: grid;
+    width: 75vw;
+    overflow-x: scroll;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    overscroll-behavior-x: contain;
+}
+
+.gallery-images::-webkit-scrollbar {
+    display: none;
+}
+
+.slider-track {
+    display: flex;
+    gap: 1rem;
 }
 
 .gallery-images .gallery-item {
-    grid-area: 1 / 1;
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    height: 90vh;
+    flex-shrink: 0;
+    scroll-snap-align: start;
     margin-bottom: 0;
-    pointer-events: none;
 }
 
-.gallery-images .gallery-item.is-active {
-    opacity: 1;
-    pointer-events: auto;
+.gallery-images .gallery-item img {
+    height: 100%;
+    width: auto;
+    max-width: 75vw;
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .gallery-work {
+        width: 100%;
+    }
+
+    .gallery-images {
+        width: 100%;
+    }
+
+    .gallery-images .gallery-item {
+        height: 75vh;
+    }
+
+    .gallery-images .gallery-item img {
+        max-width: 100vw;
+    }
+
+    .slider-caption {
+        font-size: 0.85rem;
+    }
+}
+
+.slider-nav {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.slider-caption {
+    flex: 1;
+    min-width: 0;
+    font-size: 0.85rem;
+    line-height: 1.25;
+    color: var(--text-light);
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+}
+
+.slider-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.slider-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.25rem;
+    font-size: 16px;
+    line-height: 1;
+    color: var(--text-light);
+    transition: color 0.2s;
+}
+
+.slider-btn:hover {
+    color: var(--text-color);
+}
+
+.slider-btn:disabled {
+    color: var(--text-light);
+    opacity: 0.4;
+    cursor: default;
+}
+
+.slider-counter {
+    font-size: 13px;
+    color: var(--text-light);
 }
 
 /* Captions: fixed to bottom, shown on click */

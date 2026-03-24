@@ -21,8 +21,7 @@
     
     {{ if gt (len $partnerPages) 0 }}
 
-        <div class="archive-list mt-4">
-        <p class="mb-2">with Partner & Partners</p>
+        <div class="archive-list">
             {{ range $partnerPages }}
                 <p class="archive-item mb-0">
                     {{ if .Params.externallink }}

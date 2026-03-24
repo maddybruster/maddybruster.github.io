@@ -2,6 +2,8 @@ baseURL = 'https://maddybruster.com/'
 languageCode = 'en-us'
 title = 'Maddy Bruster'
 
+ignoreFiles = ['\.tmp\.\d+\.\d+$']
+
 [outputs]
   home = ["HTML"]
 

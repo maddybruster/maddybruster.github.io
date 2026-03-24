@@ -1,119 +1,91 @@
 
 
 
-  <div class="flex flex-col flex-lg-row gap-4 main mt-4 mt-lg-6">
+  <div class="flex flex-col flex-lg-row gap-5 main mt-4 mt-lg-6">
 
     <div class="column flex-1">
       <div class="section">
       <p class="mb-2">about</p>
-      <p>Maddy Bruster is a graphic designer and writer living in New York City. She has worked as an art director, graphic designer, front-end developer and copywriter with organizations of various sizes.</p>
-
-      <p>She has written for AIGA's <i>Eye on Design, The Creative Independent, Dimepiece, New York Review of Architecture</i> and other publications.</p>
-
-      <p>From 2020-2022 she held design and web development roles at <a href="https://partnerandpartners.com">Partner & Partners</a>. Since 2020 she has run an evolving independent design practice, IT HAS TO BE REAL. Working as IT HAS TO BE REAL, Maddy collaborates with design and architecture studios, small businesses, startups, cultural institutions, artists and individuals to realize ideas across printed and digital matter. Her clients come from industries as various as art, architecture, technology, government, advocacy, politics and sports. Please get in touch via her email.</p>
-
-      <details class="accordion">
-        <summary> more</summary>
-        <p class="more">In the capacity of IT HAS TO BE REAL she works on projects that range from the hyper-commercial (websites for software companies) to one-off articles and illustrations driven by her own interests. In an era of increasing specialization she remains a committed generalist and jack-of-all-trades.</p>
-          
-        <p>As a designer her work is highly typographic and involved with language and ideas over and above images. She is interested in language and writing as part of a design practice, exemplars of which include Lorraine Wild, Stuart Bailey and Paul Elliman. Her work often explores solutions driven by ideas, coincidences, borrowing, and copying as strategies for creativity, and the aesthetics of the default and banal.</p>
-      </details>
+       {{ partial "bio.html" }}
       </div>
 
 
     </div>
 
 
-  <div class="column flex-1">
-   <div class="section">
-    <p class="mb-2">services</p>
-   
-    <div class="two-column">
-    <div class="col-1">
-    <p class="mb-1">graphic design</p>
-    <p class="mb-1">creative direction</p>
-    <p class="mb-1">identity design</p>
-    <p class="mb-1">web design</p>
-  
-    <p class="mb-1">copywriting</p>
-    </div>
+    <div class="column flex-1">
 
-    <div class="col-2 flex-1">
-    <p class="mb-1">web development</p>
-    <p class="mb-1">information architecture</p>
-    <p class="mb-1">ux design</p>
-    <p class="mb-1">project management</p>
-    <p class="mb-1">dev management</p>
-    </div>
+      <div class="section">
 
-    </div>
-    </div>
+       <div class="two-column">
 
-     <div class="section">
-      <p>Select clients include the WNBA, The Locavore Guide, AI Now Institute, Jain Family Institute, Van Alen Institute, The Rockefeller Foundation, The University of Texas at Austin, Final Draft, Mailchimp, and Taylor & Francis.</p>
-
-    <!---
-    <div class="two-column">
+        
         <div class="col-1">
-        <p class="mb-2">The Locavore Guide</p>
-        <p class="mb-2">AI Now Institute</p>
-        <p class="mb-2">Jain Family Institute</p>
-        <p class="mb-2">Van Alen Institute</p>
-        <p class="mb-2">Interference Archive</p>
-        <p class="mb-2">Urban Design Forum</p>
-        <p class="mb-2">Encode Justice</p>
-        <p class="mb-2">Accountable Tech</p>
-        <p class="mb-2">HUB Project</p>
+        <p class="mb-2">services</p>
+        <p class="mb-0">graphic design</p>
+        <p class="mb-0">creative direction</p>
+        <p class="mb-0">web design</p>
+        <p class="mb-0">identity design</p>
+        <p class="mb-0">web development</p>
+        <p class="mb-0">information architecture</p>
+        <p class="mb-0">ux design</p>
+        <p class="mb-0">copywriting</p>
+        <p class="mb-0">strategy & naming</p> 
+        <p class="mb-0">project management</p>
+        <p class="mb-0">dev management</p>
         </div>
 
         <div class="col-2 flex-1">
-        <p class="mb-2">The University of Texas at Austin</p>
-        <p class="mb-2">The Rockefeller Foundation</p>
-        <p class="mb-2">Fraunces Tavern Museum</p>
-        <p class="mb-2">Chainalysis</p>
-        <p class="mb-2">Final Draft</p>
-        <p class="mb-2">Mailchimp</p>
-        <p class="mb-2">Taylor & Francis</p>
-        <p class="mb-2">C&G Partners</p>
-        <p class="mb-2">W X Y</p>
-        <p class="mb-2">ESKW Architects</p>
-    </div>
+        <p class="mb-2">technologies</p>
+        <p class="mb-0">Figma</p>
+        <p class="mb-0">Wordpress</p>
+        <p class="mb-0">Next.js</p>
+        <p class="mb-0">Hugo</p>
+        <p class="mb-0">Gatsby</p>
+        <p class="mb-0">11ty</p>
+        <p class="mb-0">JavaScript</p>
+        <p class="mb-0">React</p>
+        <p class="mb-0">HTML & CSS</p>
+      </div>
+      </div>
+      </div>
 
-    </div> 
-    -->
+      <div class="section">
+      <p>Select clients include the WNBA, The Locavore Guide, AI Now Institute, Jain Family Institute, Van Alen Institute, The Rockefeller Foundation, The University of Texas at Austin, Final Draft, Mailchimp, and Taylor & Francis.</p>
 
-    </div>
-
-     <div class="section">
-      <p class="mb-2">teaching</p>
-      <p class="mb-0">2025-current, Pratt Institute, School of Design</p>
-      <p>Communications Design, Professional Practice</p>
-     </div>
-
-     <div class="section">
-      <a href="mailto:info@maddybruster.com" class="email-button">email me</a>
-      <a href="files/cv.pdf" target="_blank" class="email-button">CV available here</a>
       </div>
 
 
-  </div>
-
-
-  <div class="column flex-1">
-  <div class="section mr-lg-5">
-      <p class="mb-2">select projects</p>
-      {{ partial "archive.html" }}
-  
+      <div class="section">
+        <p class="mb-2">contact</p>
+          <a href="mailto:info@maddybruster.com" class="email-button">email me</a>
+          <a href="files/cv.pdf" target="_blank" class="email-button">CV available here</a>
+      </div>
+ 
 
     </div>
 
-  </div>
- 
+
+    <div class="column flex-1">
+
+    <div class="section">
+        <p class="mb-0">archive</p>
+        <p class="mb-4 text-light">coming soon...</p>
+        <p class="mb-2">with Partner & Partners</p>
+          {{ partial "archive.html" }}
+        </div>
+
+
+      <div class="section">
+        <p class="mb-2">teaching</p>
+        <p class="mb-0">2025-current, Pratt Institute, School of Design</p>
+        <p>Communications Design, Professional Practice</p>
+      </div>
 
 
 
 
-
+    </div>
 
 
 </div>
