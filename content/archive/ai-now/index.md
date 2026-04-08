@@ -2,7 +2,7 @@
 title: "AI Now"
 year: 2023
 tagline: website for AI research institute
-externallink: https://ainowinstitute.org
+siteurl: https://ainowinstitute.org
 collab: "Partner & Partners"
 ---
 

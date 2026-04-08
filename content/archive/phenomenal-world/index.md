@@ -2,7 +2,7 @@
 title: "Phenomenal World"
 year: 2021
 tagline: website, design & development
-externallink: https://www.phenomenalworld.org
+siteurl: https://www.phenomenalworld.org
 collab: "Partner & Partners"
 ---
  

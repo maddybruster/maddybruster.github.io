@@ -2,7 +2,7 @@
 title: "interferencearchive.org"
 year: 2021
 tagline: website, Interference Archive
-externallink: https://www.interferencearchive.org
+siteurl: https://www.interferencearchive.org
 collab: "Partner & Partners"
 ---
  

@@ -4,7 +4,7 @@ html {
 }
 
 :root {
-  --text-color: #333;
+  --text-color: #000;
   --text-medium: #444;
   --text-light: #bbbbbb;
   --background-color: #fff;
@@ -387,8 +387,22 @@ details.accordion p, details.accordion p:hover {
 .gallery-images .gallery-item img {
     height: 100%;
     width: auto;
-    max-width: 75vw;
     display: block;
+}
+
+.slider-track .gallery-item:only-child {
+    width: 75vw;
+}
+
+.slider-track .gallery-item:only-child img {
+    width: 100%;
+    object-fit: cover;
+}
+
+@media (min-width: 1440px) {
+    .gallery-images .gallery-item {
+        height: 82vh;
+    }
 }
 
 @media (max-width: 768px) {
@@ -411,6 +425,19 @@ details.accordion p, details.accordion p:hover {
         max-width: none;
     }
 
+    .slider-track .gallery-item:only-child {
+        width: 100%;
+    }
+
+    .slider-nav {
+        flex-direction: column;
+    }
+
+    .slider-caption {
+        width: 100%;
+        justify-content: space-between;
+    }
+
     .slider-caption {
         font-size: 0.85rem;
     }
@@ -428,6 +455,7 @@ details.accordion p, details.accordion p:hover {
     flex: 1;
     min-width: 0;
     font-size: 0.85rem;
+    justify-content: space-between;
     line-height: 1.25;
     color: var(--text-light);
     display: flex;
@@ -440,6 +468,36 @@ details.accordion p, details.accordion p:hover {
     align-items: center;
     gap: 0.5rem;
     flex-shrink: 0;
+}
+
+.caption-primary {
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+}
+
+.caption-primary p {
+    display: inline;
+    margin: 0;
+}
+
+.caption-primary p {
+    display: inline;
+    margin: 0;
+}
+
+.slider-caption a {
+    color: inherit;
+}
+
+.slider-caption.caption-open {
+    color: var(--text-color);
+}
+
+.slider-caption.caption-open .slider-btn,
+.slider-caption.caption-open ~ .slider-controls,
+.slider-caption.caption-open ~ .slider-controls .slider-btn,
+.slider-caption.caption-open ~ .slider-controls .slider-counter {
+    color: var(--text-color);
 }
 
 .slider-btn {
@@ -624,23 +682,16 @@ margin-right: calc(1.5* var(--standard-spacer));
 
 /* Writing section */
 .gallery-writing {
-    width: 100%;
-    margin-left: 0;
-    margin-right: 0;
     align-items: flex-start;
 }
 
 .writing-content {
-    width: 100%;
+    max-width: 480px;
     min-height: 90vh;
 }
 
 .writing-content p {
-    margin-top: var(--space-3);
-
-}
-
-.writing-divider {
-    border: none;
-    border-top: 1px solid var(--text-color);
+    margin-top: 0;
+    margin-bottom: var(--space-4);
+    line-height: 1.4;
 }

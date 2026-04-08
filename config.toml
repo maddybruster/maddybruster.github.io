@@ -4,6 +4,9 @@ title = 'Maddy Bruster'
 
 ignoreFiles = ['\.tmp\.\d+\.\d+$']
 
+[markup.goldmark.renderer]
+  unsafe = true
+
 [outputs]
   home = ["HTML"]
 

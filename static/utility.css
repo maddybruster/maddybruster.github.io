@@ -334,7 +334,7 @@
 
 .col-1{
     width: fit-content;
-    min-width: 100px;
+    min-width: 200px;
 }
 
 
@@ -404,12 +404,6 @@
         font-size: 16rem;
     }
 
-    .writing-content p {
-    font-size: 2rem;
-    line-height: 1.5;
-    margin-top: var(--space-4);
-    margin-bottom: var(--space-4);
-    }
 }
 
 

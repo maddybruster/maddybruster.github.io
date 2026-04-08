@@ -1,8 +1,6 @@
 ---
-title: "Phenomenal World"
-externallink: "https://phenomenalworld.org"
-date: 2026-02-05T00:00:00Z
-draft: false
+title: "Website for Phenomenal World"
+year: 2021
 ---
 
-Website for Jain Family Institute's publication focused on political economy, Phenomenal World. Led design and web development for the project with [Partner & Partners](https://partnerandpartners.com), 2021. 
+A website for Jain Family Institute's publication focused on political economy, [Phenomenal World](https://phenomenalworld.org). Led design and web development for the project with [Partner & Partners](https://partnerandpartners.com), 2021. 

@@ -15,7 +15,7 @@
     {{ range where .Site.RegularPages "Section" "work" }}
         {{ $pageImages := .Resources.ByType "image" }}
         {{ if gt (len $pageImages) 0 }}
-            <div class="gallery-group{{ if .Params.externallink }} has-link{{ end }}">
+            <div class="gallery-group" data-sort="{{ .File.Dir }}">
                 <div class="gallery-images{{ if eq (len $pageImages) 1 }} gallery-images--single{{ end }}">
                     <div class="slider-track">
                         {{ range $pageImages }}
@@ -27,14 +27,13 @@
                 </div>
                 {{ if or .Title (gt (len $pageImages) 1) }}
                 <div class="slider-nav">
-                    {{- $parts := slice .Title -}}
-                    {{- with .Params.siteurl }}{{- $parts = append . $parts -}}{{- end -}}
-                    {{- with .Params.format }}{{- $parts = append . $parts -}}{{- end -}}
-                    {{- with .Params.year }}{{- $parts = append (printf "%v" .) $parts -}}{{- end -}}
-                    {{- with .Params.collaborator }}{{- $parts = append . $parts -}}{{- end -}}
                     <div class="slider-caption">
-                        <span>{{ delimit $parts ", " }}</span>
-                        <button class="slider-btn caption-toggle">+</button>
+                        <span class="caption-primary">
+                            {{ .Title }}{{- with .Params.siteurl }}, <a href="{{ . }}" target="_blank" rel="noopener">{{ . }}</a>{{- end -}}
+                            {{- with .Params.year }}, {{ . }}{{ end -}}
+                            {{- with .Content -}}. {{ . | safeHTML }}{{- end -}}
+                        </span>
+                        {{ with .Content }}<button class="slider-btn caption-toggle" aria-expanded="false">+</button>{{ end }}
                     </div>
                     {{ if gt (len $pageImages) 1 }}
                     <div class="slider-controls">
@@ -52,33 +51,11 @@
 
 <script>
     (function() {
-        // Sort image order by filename
+        // Sort groups by data-sort attribute (directory name)
         function naturalSort(a, b) {
-            // Extract filename/dirname from the image element
-            const imgA = a.querySelector('img');
-            const imgB = b.querySelector('img');
-            const srcA = imgA ? (imgA.getAttribute('data-src') || imgA.getAttribute('src') || '') : '';
-            const srcB = imgB ? (imgB.getAttribute('data-src') || imgB.getAttribute('src') || '') : '';
-            
-            // Extract the key for sorting - either the directory name or the filename
-            const keyA = extractSortKey(srcA);
-            const keyB = extractSortKey(srcB);
-            
-            // Natural sort in reverse order (highest numbers first)
+            const keyA = a.getAttribute('data-sort') || '';
+            const keyB = b.getAttribute('data-sort') || '';
             return keyB.localeCompare(keyA, undefined, { numeric: true, sensitivity: 'base' });
-        }
-
-        function extractSortKey(src) {
-            // Remove the base URL and get the path
-            const path = src.split('/').filter(p => p && !p.startsWith('http'));
-            
-            if (path.length <= 2) {
-                // Root level image or near root - use the filename
-                return path[path.length - 1];
-            } else {
-                // Image in a subdirectory (e.g., pw-books/image.png) - use the directory name
-                return path[path.length - 2];
-            }
         }
 
         function sortArray(array) {
@@ -132,7 +109,7 @@
         const allItems = Array.from(gallery.querySelectorAll('.gallery-item'));
         hydrateNodes(allItems);
 
-        function initSliders() {
+function initSliders() {
             const sliderContainers = Array.from(gallery.querySelectorAll('.gallery-images'));
             sliderContainers.forEach(function(container) {
                 const track = container.querySelector('.slider-track');
@@ -190,6 +167,75 @@
         }
         initSliders();
 
-        // captions disabled temporarily
+        // Open all caption links in new tab
+        gallery.querySelectorAll('.slider-caption a').forEach(function(a) {
+            a.setAttribute('target', '_blank');
+            a.setAttribute('rel', 'noopener');
+        });
+
+        // Caption truncation
+        const CHAR_LIMIT = 180;
+
+        function truncateHTML(el, limit) {
+            const fullText = el.textContent;
+            if (fullText.length <= limit) return null;
+            const fullHTML = el.innerHTML;
+            let count = 0;
+            let done = false;
+
+            function walk(node) {
+                if (done) return;
+                if (node.nodeType === Node.TEXT_NODE) {
+                    const remaining = limit - count;
+                    if (node.textContent.length > remaining) {
+                        const text = node.textContent.substring(0, remaining);
+                        const lastSpace = text.lastIndexOf(' ');
+                        node.textContent = (lastSpace > 0 ? text.substring(0, lastSpace) : text) + '…';
+                        done = true;
+                        let next = node.nextSibling;
+                        while (next) {
+                            const rm = next; next = next.nextSibling; rm.parentNode.removeChild(rm);
+                        }
+                    } else {
+                        count += node.textContent.length;
+                    }
+                } else if (node.nodeType === Node.ELEMENT_NODE) {
+                    Array.from(node.childNodes).forEach(walk);
+                }
+            }
+
+            walk(el);
+            const truncatedHTML = el.innerHTML;
+            el.innerHTML = fullHTML;
+            return { fullHTML, truncatedHTML };
+        }
+
+        // Caption toggles
+        gallery.querySelectorAll('.caption-toggle').forEach(function(btn) {
+            const caption = btn.closest('.slider-caption');
+            const primary = caption.querySelector('.caption-primary');
+            if (!primary) return;
+
+            const result = truncateHTML(primary, CHAR_LIMIT);
+            if (!result) { btn.style.display = 'none'; return; }
+
+            primary.innerHTML = result.truncatedHTML;
+
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const expanded = btn.getAttribute('aria-expanded') === 'true';
+                if (expanded) {
+                    primary.innerHTML = result.truncatedHTML;
+                    caption.classList.remove('caption-open');
+                    btn.setAttribute('aria-expanded', 'false');
+                    btn.textContent = '+';
+                } else {
+                    primary.innerHTML = result.fullHTML;
+                    caption.classList.add('caption-open');
+                    btn.setAttribute('aria-expanded', 'true');
+                    btn.textContent = '−';
+                }
+            });
+        });
     })();
 </script>

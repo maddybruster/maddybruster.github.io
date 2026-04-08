@@ -1,13 +1,6 @@
 ---
-title: "The Locavore Guide to Shopping NYC 2025"
-date: 2026-02-05T00:00:00Z
-externallink: 
-siteurl: 
-format: book
+title: "The Locavore Guide to Shopping NYC"
 year: 2025
-collaborator: 
-imagesby:
-type: design, print design
-
-
 ---
+
+Publication design for guidebook to shopping local businesses in New York City developed by Caroline Weaver and [The Locavore Guide](https://thelocavore.com). 

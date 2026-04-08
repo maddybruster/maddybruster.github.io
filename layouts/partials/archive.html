@@ -7,8 +7,8 @@
         <div class="archive-list">
             {{ range $regularPages }}
                 <p class="archive-item mb-0">
-                    {{ if .Params.externallink }}
-                        <a href="{{ .Params.externallink }}">{{ .Title }},</a>
+                    {{ if .Params.siteurl }}
+                        <a href="{{ .Params.siteurl }}">{{ .Title }},</a>
                     {{ else }}
                         {{ .Title }},
                     {{ end }}
@@ -18,14 +18,14 @@
             {{ end }}
         </div>
     {{ end }}
-    
+
     {{ if gt (len $partnerPages) 0 }}
 
         <div class="archive-list">
             {{ range $partnerPages }}
                 <p class="archive-item mb-0">
-                    {{ if .Params.externallink }}
-                        <a href="{{ .Params.externallink }}">{{ .Title }},</a>
+                    {{ if .Params.siteurl }}
+                        <a href="{{ .Params.siteurl }}">{{ .Title }},</a>
                     {{ else }}
                         {{ .Title }},
                     {{ end }}
