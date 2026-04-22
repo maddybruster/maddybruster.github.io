@@ -20,21 +20,6 @@ html {
 .text-link-hover   { color: var(--link-hover); }
 .bg-background     { background-color: var(--background-color); }
 
-@font-face {
-    font-family: "Suisse Intl";
-    src: url("/fonts/SuisseIntl-Regular.woff") format("woff");
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "Suisse Intl";
-    src: url("/fonts/SuisseIntl-RegularItalic.woff") format("woff");
-    font-weight: 400;
-    font-style: italic;
-    font-display: swap;
-}
 
 * {
     margin: 0;
@@ -43,7 +28,7 @@ html {
 }
 
 body {
-    font-family: "Suisse Intl", sans-serif;
+    font-family: Arial, sans-serif;
     font-size: 0.9rem;
     line-height: 1.6;
     color: var(--text-color);
@@ -260,7 +245,7 @@ button:hover {
     border: 1px solid var(--text-color);
     background-color: var(--background-color);
     color: var(--text-color);
-    font-family: "Suisse Intl", sans-serif;
+    font-family: Arial, sans-serif;
     font-size: 0.9em;
     cursor: pointer;
     transition: background-color 0.2s, color 0.2s;
