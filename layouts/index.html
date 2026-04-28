@@ -128,6 +128,34 @@
         
         updateSections();
     })();
+
+    // Memo: fixed at bottom until footer enters view, then scrolls with page
+    (function() {
+        var memo = document.querySelector('.memo');
+        var footer = document.getElementById('about');
+        var lifeSection = document.getElementById('view-life');
+        if (!memo || !footer || !lifeSection) return;
+
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (!lifeSection.classList.contains('is-active')) return;
+                if (entry.isIntersecting) {
+                    var rect = memo.getBoundingClientRect();
+                    memo.style.position = 'absolute';
+                    memo.style.top = (rect.top + window.scrollY) + 'px';
+                    memo.style.bottom = 'auto';
+                    memo.style.opacity = '0';
+                } else if (entry.boundingClientRect.top > 0) {
+                    memo.style.position = '';
+                    memo.style.top = '';
+                    memo.style.bottom = '';
+                    memo.style.opacity = '';
+                }
+            });
+        }, { threshold: 0 });
+
+        observer.observe(footer);
+    })();
 </script>
 </body>
 </html>

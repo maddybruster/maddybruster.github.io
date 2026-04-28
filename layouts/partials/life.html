@@ -1,105 +1,162 @@
 {{ $feedSection := site.GetPage "section" "life" }}
-<div class="feed-container">
-    <div class="memo flex col-12 col-lg-3 p-0 h-fit-content">
-        <p class="small mb-0 self-center">
-            {{ with $feedSection }}
-                {{ $images := sort (.Resources.ByType "image") "Name" "desc" }}
-                {{ $latestImage := index $images 0 }}
-                {{ $filename := $latestImage.Name }}
-                {{ $dateStr := strings.TrimSuffix (path.Ext $filename) $filename }}
-                {{ if strings.Contains $dateStr "-" }}
-                    {{ $parts := strings.Split $dateStr "-" }}
-                    {{ $year := printf "20%s" (index $parts 0) }}
-                    {{ $month := index $parts 1 }}
-                    {{ $day := index $parts 2 }}
-                    {{ $monthMap := dict "01" "January" "02" "February" "03" "March" "04" "April" "05" "May" "06" "June" "07" "July" "08" "August" "09" "September" "10" "October" "11" "November" "12" "December" }}
-                    updated: {{ index $monthMap $month }} {{ $day }}, {{ $year }}
-                {{ else }}
-                    updated: Unknown
-                {{ end }}
-            {{ end }}
-        </p>    
-    </div>
+{{ $monthMap := dict "01" "Jan" "02" "Feb" "03" "Mar" "04" "Apr" "05" "May" "06" "Jun" "07" "Jul" "08" "Aug" "09" "Sep" "10" "Oct" "11" "Nov" "12" "Dec" }}
 
-    <div class="gallery gallery-life">
-        <div class="col-12 col-lg-9">
-            <div class="grid-4" id="life-grid">
-                {{ with $feedSection }}
-                    {{ $images := sort (.Resources.ByType "image") "Name" "desc" }}
-                    {{ range $index, $image := $images }}
-                        <div class="life-grid-item" data-index="{{ $index }}" data-full="{{ $image.RelPermalink }}">
-                            {{ partial "responsive-image.html" (dict "image" $image "alt" "" "class" "life-image w-100 aspect-square object-fit-cover" "sizes" "(max-width: 768px) 100vw, 25vw" "loading" "lazy" "attrs" (dict "data-full" $image.RelPermalink) "defer" true) }}
-                        </div>
+<div class="memo">
+    {{ with $feedSection }}
+        {{ $images := sort (.Resources.ByType "image") "Name" "desc" }}
+        {{ $latestImage := index $images 0 }}
+        {{ $takenDate := "" }}
+        {{ with $latestImage.Exif }}{{ with .Date }}{{ $takenDate = . }}{{ end }}{{ end }}
+        {{ if $takenDate }}
+            updated: {{ $takenDate.Format "02.01.06" }}
+        {{ else }}
+            {{ $dateStr := strings.TrimSuffix (path.Ext $latestImage.Name) $latestImage.Name }}
+            {{ if strings.Contains $dateStr "-" }}
+                {{ $parts := strings.Split $dateStr "-" }}
+                updated: {{ index $parts 2 }}.{{ index $parts 1 }}.{{ index $parts 0 }}
+            {{ else }}
+                updated: unknown
+            {{ end }}
+        {{ end }}
+    {{ end }}
+</div>
+
+<div class="gallery-life">
+    {{ with $feedSection }}
+        {{ $images := sort (.Resources.ByType "image") "Name" "desc" }}
+        <div class="gallery-feed">
+            <div class="month-labels-column" id="month-labels-col"></div>
+            <div class="grid-life">
+            {{ range $index, $image := $images }}
+                {{ $monthKey := "" }}
+                {{ $label := "" }}
+                {{ $takenDate := "" }}
+                {{ with $image.Exif }}{{ with .Date }}{{ $takenDate = . }}{{ end }}{{ end }}
+                {{ if $takenDate }}
+                    {{ $monthKey = $takenDate.Format "06-01" }}
+                    {{ $label = $takenDate.Format "Jan 06" }}
+                {{ else }}
+                    {{ $dateStr := strings.TrimSuffix (path.Ext $image.Name) $image.Name }}
+                    {{ if strings.Contains $dateStr "-" }}
+                        {{ $parts := strings.Split $dateStr "-" }}
+                        {{ $monthKey = printf "%s-%s" (index $parts 0) (index $parts 1) }}
+                        {{ $label = printf "%s %s" (index $monthMap (index $parts 1)) (index $parts 0) }}
                     {{ end }}
                 {{ end }}
-            </div>
-            <div class="load-more-container" style="text-align: center; margin-top: 2rem;">
-                <button id="load-more-life" class="load-more-btn" style="display: none;">Load More</button>
+                {{ if $monthKey }}
+                    {{ $isLandscape := gt $image.Width $image.Height }}
+                    <div class="life-grid-item{{ if $isLandscape }} is-landscape{{ end }}" data-index="{{ $index }}" data-full="{{ $image.RelPermalink }}" data-month="{{ $monthKey }}" data-month-label="{{ $label }}">
+                        {{ partial "responsive-image.html" (dict "image" $image "alt" "" "class" "life-image w-100" "sizes" (cond $isLandscape "(max-width: 768px) 100vw, 66vw" "(max-width: 768px) 50vw, 33vw") "loading" "lazy" "attrs" (dict "data-full" $image.RelPermalink) "defer" true) }}
+                    </div>
+                {{ end }}
+            {{ end }}
             </div>
         </div>
+    {{ end }}
+    <div class="load-more-container" style="text-align: center; margin-top: 2rem;">
+        <button id="load-more-life" class="load-more-btn" style="display: none;">Load More</button>
     </div>
 </div>
 
 <script>
     (function() {
-        const grid = document.getElementById('life-grid');
+        const container = document.querySelector('.gallery-life');
+        const grid = container.querySelector('.grid-life');
         const items = Array.from(grid.querySelectorAll('.life-grid-item'));
         const loadMoreBtn = document.getElementById('load-more-life');
-        const ITEMS_PER_PAGE = 20;
+        const ITEMS_PER_PAGE = 21;
         let currentlyVisible = 0;
 
-        // Initially hide all items
-        items.forEach(item => {
-            item.style.display = 'none';
-        });
+        items.forEach(item => { item.style.display = 'none'; });
 
-        // Function to show more items
+        function positionMonthLabels() {
+            const labelsCol = document.getElementById('month-labels-col');
+            if (!labelsCol || !grid) return;
+            labelsCol.innerHTML = '';
+
+            const gridRect = grid.getBoundingClientRect();
+            const visibleItems = items.filter(item => item.style.display !== 'none');
+            if (visibleItems.length === 0) return;
+
+            const seen = new Set();
+            const monthFirstItems = [];
+            visibleItems.forEach(item => {
+                const month = item.dataset.month;
+                if (month && !seen.has(month)) {
+                    seen.add(month);
+                    monthFirstItems.push(item);
+                }
+            });
+
+            let lastLabelBottom = -Infinity;
+            monthFirstItems.forEach(item => {
+                const itemRect = item.getBoundingClientRect();
+                const itemOffsetTop = itemRect.top - gridRect.top;
+                const itemOffsetLeft = itemRect.left - gridRect.left;
+
+                let labelTop = itemOffsetTop;
+                if (itemOffsetLeft > 10) {
+                    labelTop += itemRect.height + 8;
+                }
+                if (labelTop < lastLabelBottom + 4) {
+                    labelTop = lastLabelBottom + 4;
+                }
+
+                const label = document.createElement('p');
+                label.className = 'month-label';
+                label.style.top = labelTop + 'px';
+                label.textContent = item.dataset.monthLabel;
+                labelsCol.appendChild(label);
+
+                lastLabelBottom = labelTop + 20;
+            });
+        }
+
         function showMoreItems() {
             const end = Math.min(currentlyVisible + ITEMS_PER_PAGE, items.length);
             for (let i = currentlyVisible; i < end; i++) {
                 items[i].style.display = 'block';
             }
             currentlyVisible = end;
-
-            // Hide button if all items are shown
             if (currentlyVisible >= items.length) {
                 loadMoreBtn.style.display = 'none';
             }
+            requestAnimationFrame(positionMonthLabels);
         }
 
-        // Show initial batch
         showMoreItems();
 
-        // Show load more button if there are more items
         if (currentlyVisible < items.length) {
             loadMoreBtn.style.display = 'inline-block';
         }
 
-        // Load more on button click
         loadMoreBtn.addEventListener('click', showMoreItems);
+
+        let roTimer;
+        const ro = new ResizeObserver(function() {
+            clearTimeout(roTimer);
+            roTimer = setTimeout(positionMonthLabels, 50);
+        });
+        ro.observe(grid);
     })();
 
     // Lightbox functionality
     window.onload = function() {
         var imageNodes = document.querySelectorAll(".gallery-life .life-image");
 
-        // set a unique # ID for each image 
-        for (var i = 0; i < imageNodes.length; i++) {  
+        for (var i = 0; i < imageNodes.length; i++) {
             imageNodes[i].setAttribute("id", "life-image-" + i);
         }
 
-        // on click, open lightbox
         document.addEventListener("mousedown", event => {
-            // if the modal already exists, do nothing  
+            if (event.target.closest('.site-nav')) return;
             if (document.body.getElementsByClassName('modal').length > 0) {
                 return;
             }
-           
-            // else if the modal does not exist yet, open the modal 
+
             let elements = document.elementsFromPoint(event.clientX, event.clientY);
             elements.forEach(function(element) {
                 if (element.classList.contains("life-image")) {
-                    // save the image src as a variable 
                     var container = element.closest(".life-grid-item");
                     var full = element.getAttribute("data-full");
                     if (!full && container) {
@@ -107,20 +164,15 @@
                     }
                     var src = full || element.currentSrc || element.src;
 
-                    // creating the modal
                     const modal = document.createElement("div");
                     modal.setAttribute("class", "modal");
                     document.body.append(modal);
-                    
-                    // adding image to modal
+
                     const newImage = document.createElement("img");
                     newImage.setAttribute("src", src);
                     modal.append(newImage);
 
-                    // close function
-                    modal.onclick = () => {
-                        modal.remove();
-                    };
+                    modal.onclick = () => { modal.remove(); };
                 }
             });
         });

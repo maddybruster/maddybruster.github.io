@@ -100,6 +100,7 @@ async function compressImages() {
                         fit: 'inside',
                         withoutEnlargement: true
                     })
+                    .withMetadata()
                     .jpeg({ quality: 80, progressive: true })
                     .toFile(processedPath + '.tmp');
                 

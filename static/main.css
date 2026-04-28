@@ -610,25 +610,92 @@ margin-right: calc(1.5* var(--standard-spacer));
     width: 100%;
 }
 
+/* Life section layout */
+.gallery-life {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+}
+
+.gallery-feed {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.month-labels-column {
+    width: 4rem;
+    flex-shrink: 0;
+    position: relative;
+    overflow: visible;
+}
+
+.month-label {
+    position: absolute;
+    font-size: 0.75rem;
+    color: var(--text-light);
+    white-space: nowrap;
+    padding-top: 2px;
+}
+
+.gallery-feed .grid-life {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Life grid — 10-col sub-grid, 3 images per row with varying widths */
+.grid-life {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-auto-rows: auto;
+    gap: 8px;
+}
+
+.life-grid-item {
+    overflow: hidden;
+    grid-column: span 3; /* default: 30% */
+}
+
+/* Row A: 30%, 40%, 30% */
+.life-grid-item:nth-child(9n+1) { grid-column: span 3; }
+.life-grid-item:nth-child(9n+2) { grid-column: span 4; }
+.life-grid-item:nth-child(9n+3) { grid-column: span 3; }
+
+/* Row B: 40%, 30%, 30% */
+.life-grid-item:nth-child(9n+4) { grid-column: span 4; }
+.life-grid-item:nth-child(9n+5) { grid-column: span 3; }
+.life-grid-item:nth-child(9n+6) { grid-column: span 3; }
+
+/* Row C: 30%, 30%, 40% */
+.life-grid-item:nth-child(9n+7) { grid-column: span 3; }
+.life-grid-item:nth-child(9n+8) { grid-column: span 3; }
+.life-grid-item:nth-child(9n+9) { grid-column: span 4; }
+
+.life-grid-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
 
 
 /* Memo styling */
 .memo {
-    background-color: #eef;
-    color: #b6c1ff;
-    height: 3rem;
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
+    position: fixed;
+    bottom: 1rem;
+    left: 1.25rem;
+    color: #00AD76;
+    font-family: ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace;
+    font-size: 0.75rem;
+    z-index: 10;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    padding: var(--space-1) var(--space-2);
+    border: 1px solid var(--text-color);
+    background-color: var(--background-color);
 }
 
-.memo.p-0 {
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
-}
-
-.memo * {
-    margin: 0;
-}
 
 
 /* Image modal */

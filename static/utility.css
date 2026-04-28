@@ -338,10 +338,22 @@
 }
 
 
-
 @media (max-width: 768px) {
     .grid-4 {
         grid-template-columns: repeat(1, 1fr);
+    }
+
+    .grid-life {
+        grid-template-columns: 1fr;
+    }
+
+    .grid-life .life-grid-item,
+    .grid-life .life-grid-item:nth-child(n) {
+        grid-column: span 1;
+    }
+
+    .month-labels-column {
+        display: none;
     }
 
     .feed-container {
@@ -368,9 +380,9 @@
 
 @media screen and (min-width: 768px) {
     .memo {
-        width: 25vw;
-        max-width: 300px;
+        width: auto;
         z-index: 10;
+        padding: 1rem;
     }
     
     /* Remove fixed positioning when feed section is not active */
@@ -396,7 +408,7 @@
 /* Larger screens */
 @media screen and (min-width: 1024px) {
     .gallery {
-        width: 75vw !important;
+        width: 90vw !important;
         margin-left: auto !important;
     }
     
