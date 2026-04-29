@@ -45,11 +45,23 @@
 			nav.classList.remove('hide');
 		}
 
+		function updateScrollState() {
+			if (window.scrollY > 10) {
+				nav.classList.add('is-scrolled');
+			} else {
+				nav.classList.remove('is-scrolled');
+			}
+		}
+
 		window.addEventListener('scroll', function() {
+			updateScrollState();
+			if (window.innerWidth <= 768) return;
 			hideNav();
 			clearTimeout(scrollTimeout);
 			scrollTimeout = setTimeout(showNav, SCROLL_DELAY);
 		});
+
+		updateScrollState();
 
 		// Scroll to top when clicking view toggles
 		const viewToggles = document.querySelectorAll('.nav-toggle input[type="checkbox"]');
