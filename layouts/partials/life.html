@@ -8,12 +8,12 @@
         {{ $takenDate := "" }}
         {{ with $latestImage.Exif }}{{ with .Date }}{{ $takenDate = . }}{{ end }}{{ end }}
         {{ if $takenDate }}
-            updated: {{ $takenDate.Format "02.01.06" }}
+            updated: {{ $takenDate.Format "01.02.06" }}
         {{ else }}
             {{ $dateStr := strings.TrimSuffix (path.Ext $latestImage.Name) $latestImage.Name }}
             {{ if strings.Contains $dateStr "-" }}
                 {{ $parts := strings.Split $dateStr "-" }}
-                updated: {{ index $parts 2 }}.{{ index $parts 1 }}.{{ index $parts 0 }}
+                updated: {{ index $parts 1 }}.{{ index $parts 2 }}.{{ index $parts 0 }}
             {{ else }}
                 updated: unknown
             {{ end }}
