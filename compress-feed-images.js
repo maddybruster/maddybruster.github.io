@@ -4,6 +4,27 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
+function getExifDate(filePath) {
+    try {
+        const out = execSync(`exiftool -DateTimeOriginal -s3 "${filePath}"`, { encoding: 'utf8' }).trim();
+        // Format: 2026:01:31 15:13:35
+        const match = out.match(/^(\d{4}):(\d{2}):(\d{2})/);
+        if (match) {
+            const yy = match[1].slice(2);
+            return `${yy}-${match[2]}-${match[3]}`;
+        }
+    } catch (_) {}
+    return null;
+}
+
+function uniqueDateName(dir, dateName, ext) {
+    const base = path.join(dir, dateName + ext);
+    if (!fs.existsSync(base)) return base;
+    let i = 2;
+    while (fs.existsSync(path.join(dir, `${dateName}-${i}${ext}`))) i++;
+    return path.join(dir, `${dateName}-${i}${ext}`);
+}
+
 const feedDir = path.join(__dirname, 'content', 'life');
 
 // Marker file to track which images have been compressed
@@ -82,7 +103,7 @@ async function compressImages() {
                     const jpgPath = path.join(feedDir, baseName + '.jpg');
                     console.log(`  Converting HEIC to JPG...`);
                     try {
-                        execSync(`convert "${filePath}" -quality 80 "${jpgPath}"`);
+                        execSync(`magick "${filePath}" -quality 80 "${jpgPath}"`);
                         fs.unlinkSync(filePath); // Delete original HEIC
                         processedPath = jpgPath;
                         recordedFilename = baseName + '.jpg'; // Update filename for tracking
@@ -106,11 +127,22 @@ async function compressImages() {
                 
                 // Replace original with compressed version
                 fs.renameSync(processedPath + '.tmp', processedPath);
+
+                // Rename to YY-MM-DD.jpg based on EXIF date
+                const dateName = getExifDate(processedPath);
+                if (dateName) {
+                    const renamedPath = uniqueDateName(feedDir, dateName, '.jpg');
+                    fs.renameSync(processedPath, renamedPath);
+                    recordedFilename = path.basename(renamedPath);
+                    processedPath = renamedPath;
+                    console.log(`  Renamed to: ${recordedFilename}`);
+                }
+
                 newlyCompressed.push(recordedFilename);
-                
+
                 const newSize = fs.statSync(processedPath).size;
                 const newSizeMB = (newSize / (1024 * 1024)).toFixed(2);
-                console.log(`✓ Compressed: ${recordedFilename} (${newSizeMB}MB)`);
+                console.log(`✓ Done: ${recordedFilename} (${newSizeMB}MB)`);
             } catch (err) {
                 console.error(`✗ Error compressing ${file}:`, err.message);
                 // Clean up temporary files if they exist
