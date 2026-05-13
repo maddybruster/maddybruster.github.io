@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Title }} — {{ .Site.Title }}</title>
+    <link rel="stylesheet" href="{{ .Site.BaseURL }}main.css">
+    <link rel="stylesheet" href="{{ .Site.BaseURL }}utility.css">
+</head>
+<body class="my-2 mx-3">
+{{ partial "nav.html" . }}
+<div class="page-layout">
+{{ partial "project-index.html" . }}
+<div class="page-content">
+<main class="content post-single">
+    <article class="post-article">
+
+        <div class="post-main">
+            {{ partial "post-header.html" . }}
+
+            {{ with .Content }}
+            <div class="post-content">{{ . | safeHTML }}</div>
+            {{ end }}
+        </div>
+
+    </article>
+</main>
+</div>
+</div>
+{{ partial "mobile-nav.html" . }}
+</body>
+</html>

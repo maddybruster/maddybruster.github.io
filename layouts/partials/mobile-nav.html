@@ -1,0 +1,54 @@
+{{ $allProjects := where site.RegularPages "Section" "projects" }}
+{{ $writing := slice }}
+{{ $notWriting := slice }}
+{{ range $allProjects }}
+    {{ $cat := .Params.category }}
+    {{ $catMatch := or (eq $cat "writing") (and (reflect.IsSlice $cat) (in $cat "writing")) }}
+    {{ $tagMatch := in .Params.tags "writing" }}
+    {{ if or $catMatch $tagMatch }}
+        {{ $writing = $writing | append . }}
+    {{ else }}
+        {{ $notWriting = $notWriting | append . }}
+    {{ end }}
+{{ end }}
+{{ $sortedNotWriting := sort $notWriting "Date" "desc" }}
+{{ $sortedWriting := sort $writing "Date" "desc" }}
+
+<hr class="mobile-nav-rule">
+<nav class="mobile-nav">
+    <div class="mobile-nav-section">
+        <p class="mobile-nav-label">projects</p>
+        <ul class="mobile-nav-list">
+            {{ range $sortedNotWriting }}
+            <li>
+                {{ if eq .Params.status "draft" }}
+                <span class="mobile-nav-link mobile-nav-link--draft">{{ .Title | markdownify }}</span>
+                {{ else }}
+                <a href="{{ .RelPermalink }}" class="mobile-nav-link">{{ .Title | markdownify }}</a>
+                {{ end }}
+            </li>
+            {{ end }}
+        </ul>
+    </div>
+    <div class="mobile-nav-section">
+        <p class="mobile-nav-label">writing</p>
+        <ul class="mobile-nav-list">
+            {{ range $sortedWriting }}
+            <li>
+                {{ if eq .Params.status "draft" }}
+                <span class="mobile-nav-link mobile-nav-link--draft">{{ .Title | markdownify }}</span>
+                {{ else }}
+                <a href="{{ .RelPermalink }}" class="mobile-nav-link">{{ .Title | markdownify }}</a>
+                {{ end }}
+            </li>
+            {{ end }}
+        </ul>
+    </div>
+    <ul class="mobile-nav-list mobile-nav-links">
+        <li><a href="/#about" class="mobile-nav-link">about</a></li>
+        <li><a href="mailto:info@maddybruster.com" class="mobile-nav-link">email me</a></li>
+        <li><a href="https://www.are.na/maddy-bruster" target="_blank" rel="noopener" class="mobile-nav-link">are.na/maddy-bruster</a></li>
+        <li><a href="https://special.fish/maddy" target="_blank" rel="noopener" class="mobile-nav-link">special.fish/maddy</a></li>
+    </ul>
+</nav>
+<hr class="mobile-nav-rule">

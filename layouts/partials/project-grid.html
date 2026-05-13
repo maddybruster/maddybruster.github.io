@@ -1,0 +1,31 @@
+{{ $cat := .category }}
+{{ $allProjects := where site.RegularPages "Section" "projects" }}
+{{ $filtered := $allProjects }}
+{{ if $cat }}
+    {{ $filtered = slice }}
+    {{ range $allProjects }}
+        {{ if in .Params.category $cat }}
+            {{ $filtered = $filtered | append . }}
+        {{ end }}
+    {{ end }}
+{{ end }}
+{{ $sorted := sort $filtered "Date" "desc" }}
+
+{{ if $sorted }}
+<div class="projects-grid">
+    {{ range $sorted }}
+        {{ partial "project-card.html" . }}
+    {{ end }}
+</div>
+
+<script>
+(function() {
+    document.querySelectorAll('.projects-grid img[data-src]').forEach(function(img) {
+        img.setAttribute('src', img.getAttribute('data-src'));
+        img.removeAttribute('data-src');
+        if (img.hasAttribute('data-srcset')) { img.setAttribute('srcset', img.getAttribute('data-srcset')); img.removeAttribute('data-srcset'); }
+        if (img.hasAttribute('data-sizes')) { img.setAttribute('sizes', img.getAttribute('data-sizes')); img.removeAttribute('data-sizes'); }
+    });
+})();
+</script>
+{{ end }}

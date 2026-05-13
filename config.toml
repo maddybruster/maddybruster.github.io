@@ -10,3 +10,6 @@ ignoreFiles = ['\.tmp\.\d+\.\d+$']
 [outputs]
   home = ["HTML"]
 
+[permalinks]
+  projects = "/:slug/"
+

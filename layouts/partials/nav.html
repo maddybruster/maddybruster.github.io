@@ -2,17 +2,21 @@
 	<a class="site-title" href="{{ .Site.BaseURL }}">maddy bruster</a>
 	<div class="nav-groups">
 		<div class="nav-controls">
+			{{ $currentView := "" }}
+			{{ if not .IsHome }}
+				{{ if eq .Section "life" }}
+					{{ $currentView = "view-life" }}
+				{{ else }}
+					{{ $currentView = "view-work" }}
+				{{ end }}
+			{{ end }}
 			<label class="nav-toggle">
-				<input type="checkbox" data-target="view-life" />
+				<input type="checkbox" data-target="view-life"{{ if eq $currentView "view-life" }} checked{{ end }} />
 				life
 			</label>
 			<label class="nav-toggle">
-				<input type="checkbox" data-target="view-work" />
+				<input type="checkbox" data-target="view-work"{{ if eq $currentView "view-work" }} checked{{ end }} />
 				work
-			</label>
-			<label class="nav-toggle">
-				<input type="checkbox" data-target="view-writing" />
-				writing
 			</label>
 		</div>
 		<div class="nav-links">
@@ -30,46 +34,37 @@
 	(function() {
 		const nav = document.querySelector('.site-nav');
 		if (!nav) return;
-		let scrollTimeout;
-		const SCROLL_DELAY = 300;
 
 		function setNavHeight() {
 			document.documentElement.style.setProperty('--nav-height', `${nav.offsetHeight}px`);
 		}
 
-		function hideNav() {
-			nav.classList.add('hide');
-		}
-
-		function showNav() {
-			nav.classList.remove('hide');
-		}
-
-		function updateScrollState() {
-			if (window.scrollY > 10) {
-				nav.classList.add('is-scrolled');
-			} else {
-				nav.classList.remove('is-scrolled');
-			}
-		}
-
 		window.addEventListener('scroll', function() {
-			updateScrollState();
-			if (window.innerWidth <= 768) return;
-			hideNav();
-			clearTimeout(scrollTimeout);
-			scrollTimeout = setTimeout(showNav, SCROLL_DELAY);
+			nav.classList.toggle('is-scrolled', window.scrollY > 10);
 		});
 
-		updateScrollState();
+		const viewToggles = Array.from(document.querySelectorAll('.nav-toggle input[type="checkbox"]'));
+		const isSubPage = !document.getElementById('view-work');
 
-		// Scroll to top when clicking view toggles
-		const viewToggles = document.querySelectorAll('.nav-toggle input[type="checkbox"]');
-		viewToggles.forEach(toggle => {
-			toggle.addEventListener('change', function() {
-				window.scrollTo({ top: 0, behavior: 'smooth' });
+		if (isSubPage) {
+			viewToggles.forEach(function(toggle) {
+				toggle.addEventListener('change', function() {
+					const targetId = this.getAttribute('data-target');
+					const state = {};
+					viewToggles.forEach(function(t) {
+						state[t.getAttribute('data-target')] = t.getAttribute('data-target') === targetId;
+					});
+					sessionStorage.setItem('navState', JSON.stringify(state));
+					window.location.href = '/';
+				});
 			});
-		});
+		} else {
+			viewToggles.forEach(function(toggle) {
+				toggle.addEventListener('change', function() {
+					window.scrollTo({ top: 0, behavior: 'smooth' });
+				});
+			});
+		}
 
 		window.addEventListener('load', setNavHeight);
 		window.addEventListener('resize', setNavHeight);

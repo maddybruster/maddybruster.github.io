@@ -1,0 +1,43 @@
+{{ $allProjects := where site.RegularPages "Section" "projects" }}
+{{ $filtered := slice }}
+{{ range $allProjects }}
+    {{ $cat := .Params.category }}
+    {{ $catMatch := or (eq $cat "writing") (and (reflect.IsSlice $cat) (in $cat "writing")) }}
+    {{ $tagMatch := in .Params.tags "writing" }}
+    {{ if or $catMatch $tagMatch }}
+        {{ $filtered = $filtered | append . }}
+    {{ end }}
+{{ end }}
+{{ $sorted := sort $filtered "Date" "desc" }}
+
+{{ if $sorted }}
+<div class="writing-list">
+    <div class="writing-list-header">
+        <div></div>
+        <div>Title</div>
+        <div>Publication</div>
+        <div>Year</div>
+    </div>
+    {{ range $sorted }}
+        {{ $images := .Resources.ByType "image" }}
+        {{ $featured := index $images 0 }}
+        <div class="writing-row">
+            <div class="writing-thumb">
+                {{ if $featured }}
+                    <img src="{{ $featured.RelPermalink }}" alt="{{ .Title }}">
+                {{ else }}
+                    <div class="writing-thumb-placeholder"></div>
+                {{ end }}
+            </div>
+            <div class="writing-title">
+                <a href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a>
+                {{ with .Params.siteurl }}
+                <a href="{{ . }}" target="_blank" rel="noopener" class="writing-external" aria-label="View published piece">↗</a>
+                {{ end }}
+            </div>
+            <div class="writing-pub">{{ .Params.publication | markdownify }}</div>
+            <div class="writing-year">{{ .Params.year }}</div>
+        </div>
+    {{ end }}
+</div>
+{{ end }}

@@ -1,0 +1,18 @@
+<header class="post-header mb-4">
+    <h1 class="post-title">{{ .Params.title | markdownify }}</h1>
+    <div class="post-meta">
+        {{ $metaItems := slice }}
+        {{ with .Params.category }}
+            {{ if reflect.IsSlice . }}{{ range . }}{{ $metaItems = $metaItems | append . }}{{ end }}{{ else }}{{ $metaItems = $metaItems | append . }}{{ end }}
+        {{ end }}
+        {{ with .Params.tags }}
+            {{ range . }}{{ $metaItems = $metaItems | append . }}{{ end }}
+        {{ end }}
+        {{ if $metaItems }}
+        <span class="post-meta-tags">{{ delimit $metaItems ", " }}</span>
+        {{ end }}
+        {{ with .Params.siteurl }}
+        <a href="{{ . }}" target="_blank" rel="noopener" class="post-external">{{ with $.Params.publication }}{{ . | markdownify }}{{ else }}{{ $.Params.siteurl }}{{ end }} ↗</a>
+        {{ end }}
+    </div>
+</header>

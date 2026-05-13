@@ -1,0 +1,51 @@
+{{ $allProjects := where site.RegularPages "Section" "projects" }}
+{{ $writing := slice }}
+{{ $notWriting := slice }}
+{{ range $allProjects }}
+    {{ $cat := .Params.category }}
+    {{ $catMatch := or (eq $cat "writing") (and (reflect.IsSlice $cat) (in $cat "writing")) }}
+    {{ $tagMatch := in .Params.tags "writing" }}
+    {{ if or $catMatch $tagMatch }}
+        {{ $writing = $writing | append . }}
+    {{ else }}
+        {{ $notWriting = $notWriting | append . }}
+    {{ end }}
+{{ end }}
+{{ $sortedNotWriting := sort $notWriting "Date" "desc" }}
+{{ $sortedWriting := sort $writing "Date" "desc" }}
+
+<nav class="project-index">
+    <div class="mb-3">
+    <p class="m-0 pb-2">projects</p>
+    <ul class="project-index-list">
+        {{ range $sortedNotWriting }}
+        <li>
+            {{ if eq .Params.status "draft" }}
+            <span class="project-index-link project-index-link--draft">{{ .Title | markdownify }}</span>
+            {{ else }}
+            <a href="{{ .RelPermalink }}" class="project-index-link{{ if eq $.RelPermalink .RelPermalink }} is-active{{ end }}">{{ .Title | markdownify }}</a>
+            {{ end }}
+        </li>
+        {{ end }}
+         </div>
+
+        <div class="mb-3">
+        <p class="m-0 pb-2">writing</p>
+        {{ range $sortedWriting }}
+        <li>
+            {{ if eq .Params.status "draft" }}
+            <span class="project-index-link project-index-link--draft">{{ .Title | markdownify }}</span>
+            {{ else }}
+            <a href="{{ .RelPermalink }}" class="project-index-link{{ if eq $.RelPermalink .RelPermalink }} is-active{{ end }}">{{ .Title | markdownify }}</a>
+            {{ end }}
+        </li>
+        {{ end }}
+        </div>
+    </ul>
+    <ul class="project-index-list project-index-nav">
+        <li><a href="#about" class="project-index-link">about</a></li>
+        <li><a href="mailto:info@maddybruster.com" class="project-index-link">email me</a></li>
+        <li><a href="https://www.are.na/maddy-bruster" target="_blank" rel="noopener" class="project-index-link">are.na/mady-bruster</a></li>
+        <li><a href="https://special.fish/maddy" target="_blank" rel="noopener" class="project-index-link">special.fish/maddy</a></li>
+    </ul>
+</nav>

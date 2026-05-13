@@ -1,0 +1,31 @@
+{{ $images := .Resources.ByType "image" }}
+{{ $featured := index $images 0 }}
+{{ $isDraft := eq .Params.status "draft" }}
+
+{{ $meta := slice }}
+{{ with .Params.category }}
+    {{ if reflect.IsSlice . }}
+        {{ range . }}{{ $meta = $meta | append . }}{{ end }}
+    {{ else }}
+        {{ $meta = $meta | append . }}
+    {{ end }}
+{{ end }}
+{{ with .Params.tags }}
+    {{ range . }}{{ $meta = $meta | append . }}{{ end }}
+{{ end }}
+
+{{ if $isDraft }}
+<div class="project-card project-card--draft">
+{{ else }}
+<a href="{{ .RelPermalink }}" class="project-card">
+{{ end }}
+    <div class="project-image{{ if not $featured }} project-image--placeholder{{ end }}">
+        {{ if $featured }}
+            {{ partial "responsive-image.html" (dict "image" $featured "alt" .Title "sizes" "(max-width: 768px) 100vw, 33vw" "widths" (slice 400 800 1200) "loading" "lazy" "defer" true) }}
+        {{ end }}
+    </div>
+    <div class="project-info">
+        {{ with .Params.title }}<p class="project-oneline pr-3">{{ . | markdownify }}</p>{{ end }}
+        {{ if $meta }}<p class="project-meta">{{ delimit $meta " · " }}</p>{{ end }}
+    </div>
+{{ if $isDraft }}</div>{{ else }}</a>{{ end }}
