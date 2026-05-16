@@ -44,6 +44,17 @@
             {{ end }}
         </ul>
     </div>
+    {{ $livePosts := where site.RegularPages "Section" "blog" }}
+    {{ if $livePosts }}
+    <div class="mobile-nav-section">
+        <p class="mobile-nav-label">blog</p>
+        <ul class="mobile-nav-list">
+            {{ range $livePosts.ByDate.Reverse }}
+            <li><a href="{{ .RelPermalink }}" class="mobile-nav-link">{{ .Title }}</a></li>
+            {{ end }}
+        </ul>
+    </div>
+    {{ end }}
     <ul class="mobile-nav-list mobile-nav-links">
         <li><a href="/#about" class="mobile-nav-link">about</a></li>
         <li><a href="mailto:info@maddybruster.com" class="mobile-nav-link">email me</a></li>

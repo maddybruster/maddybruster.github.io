@@ -7,6 +7,10 @@ ignoreFiles = ['\.tmp\.\d+\.\d+$']
 [markup.goldmark.renderer]
   unsafe = true
 
+[markup.highlight]
+  noClasses = false
+  codeFences = true
+
 [outputs]
   home = ["HTML"]
 

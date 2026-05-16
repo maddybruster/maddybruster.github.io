@@ -1,0 +1,12 @@
+{{ $posts := where site.RegularPages "Section" "blog" }}
+{{ $sorted := $posts.ByDate.Reverse }}
+<div class="blog-centered blog-home">
+    <ul class="blog-list">
+        {{ range $sorted }}
+        <li class="blog-list-item">
+            <a href="{{ .RelPermalink }}" class="blog-list-title">{{ .Title }}</a>
+            <span class="blog-list-date">{{ .Date.Format "01.02.06" }}</span>
+        </li>
+        {{ end }}
+    </ul>
+</div>

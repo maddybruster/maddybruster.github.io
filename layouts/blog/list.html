@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog — {{ .Site.Title }}</title>
+    <link rel="stylesheet" href="{{ .Site.BaseURL }}main.css">
+    <link rel="stylesheet" href="{{ .Site.BaseURL }}utility.css">
+</head>
+<body class="my-2 mx-3">
+{{ partial "nav.html" . }}
+<div class="blog-layout">
+    <main class="blog-centered">
+        <ul class="blog-list">
+            {{ range .Pages.ByDate.Reverse }}
+            <li class="blog-list-item">
+                <a href="{{ .RelPermalink }}" class="blog-list-title">{{ .Title }}</a>
+                <span class="blog-list-date">{{ .Date.Format "01.02.06" }}</span>
+            </li>
+            {{ end }}
+        </ul>
+    </main>
+</div>
+{{ partial "mobile-nav.html" . }}
+<footer class="site-footer">
+    <div id="about">{{ partial "footer.html" }}</div>
+    <div class="site-credits flex flex-col flex-lg-row">
+        <span>© {{ now.Format "2006" }}, maddy bruster &nbsp;design & art direction &nbsp;<span class="location m-0">Brooklyn, NY</span></span>
+        <a href="#top">back to top</a>
+    </div>
+</footer>
+</body>
+</html>

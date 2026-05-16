@@ -6,6 +6,8 @@
 			{{ if not .IsHome }}
 				{{ if eq .Section "life" }}
 					{{ $currentView = "view-life" }}
+				{{ else if eq .Section "blog" }}
+					{{ $currentView = "view-blog" }}
 				{{ else }}
 					{{ $currentView = "view-work" }}
 				{{ end }}
@@ -18,6 +20,12 @@
 				<input type="checkbox" data-target="view-work"{{ if eq $currentView "view-work" }} checked{{ end }} />
 				work
 			</label>
+			{{ if where site.RegularPages "Section" "blog" }}
+			<label class="nav-toggle">
+				<input type="checkbox" data-target="view-blog"{{ if eq $currentView "view-blog" }} checked{{ end }} />
+				blog
+			</label>
+			{{ end }}
 		</div>
 		<div class="nav-links">
 			<a class="nav-icon" href="https://www.are.na/maddy-bruster" target="_blank" rel="noopener">

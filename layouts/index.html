@@ -24,6 +24,9 @@
             <section id="view-work" class="content-section">
                 {{ partial "work.html" . }}
             </section>
+            <section id="view-blog" class="content-section">
+                {{ partial "blog.html" . }}
+            </section>
         </main>
     </div>
 </div>
@@ -71,7 +74,7 @@
         
         const updateSections = () => {
             const anyChecked = toggles.some(toggle => toggle.checked);
-            
+
             toggles.forEach(toggle => {
                 const targetId = toggle.getAttribute('data-target');
                 const section = document.getElementById(targetId);
@@ -83,9 +86,17 @@
                     hydrateImages(section);
                 }
             });
-            
+
             if (defaultSection) {
                 defaultSection.classList.toggle('is-active', !anyChecked);
+            }
+
+            const lifeToggle = toggles.find(t => t.getAttribute('data-target') === 'view-life');
+            const blogToggle = toggles.find(t => t.getAttribute('data-target') === 'view-blog');
+            const projectIndex = document.querySelector('.project-index');
+            if (projectIndex) {
+                const hideIndex = (lifeToggle && lifeToggle.checked) || (blogToggle && blogToggle.checked);
+                projectIndex.style.display = hideIndex ? 'none' : '';
             }
         };
         
