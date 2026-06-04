@@ -298,8 +298,8 @@ details.accordion p, details.accordion p:hover {
 
 /* Projects grid */
 .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
+    flex-wrap: wrap;
     gap: var(--space-4);
     width: 100%;
 }
@@ -308,6 +308,19 @@ details.accordion p, details.accordion p:hover {
     display: block;
     text-decoration: none;
     color: inherit;
+    flex: 2 0 calc(33.333% - var(--space-4));
+    max-width: 33.333%;
+    min-width: 0;
+}
+
+.project-card--idea {
+    flex: 1 0 calc(16.667% - var(--space-4));
+    max-width: 16.667%;
+}
+
+.project-card--idea .project-image img {
+    padding: var(--space-4);
+    opacity: 30%;
 }
 
 .project-card--draft {
@@ -407,8 +420,12 @@ details.accordion p, details.accordion p:hover {
 
 @media (max-width: 768px) {
     .projects-grid {
-        grid-template-columns: 1fr;
         gap: var(--space-3);
+    }
+
+    .project-card,
+    .project-card--idea {
+        flex: 1 0 100%;
     }
 
     .slider-nav {
@@ -1003,7 +1020,7 @@ margin-right: calc(1.5* var(--standard-spacer));
 @media (min-width: 768px) {
     .post-header,
     .post-content {
-        max-width: 50%;
+        max-width: 70%;
     }
 }
 
@@ -1058,11 +1075,24 @@ margin-right: calc(1.5* var(--standard-spacer));
     margin-bottom: 0;
 }
 
-.post-content h2,
+.post-content h2 {
+    font-size: var(--font-size-large);
+    font-weight: inherit;
+    margin: 1.75em 0 0.5em;
+}
+
 .post-content h3 {
+    font-size: 1.15rem;
+    font-weight: inherit;
+    margin: 1.5em 0 0.5em;
+}
+
+.post-content h4,
+.post-content h5,
+.post-content h6 {
     font-size: inherit;
     font-weight: inherit;
-    margin: 0 0 1.25em;
+    margin: 1.25em 0 0.5em;
 }
 
 .post-content a {
@@ -1202,7 +1232,7 @@ margin-right: calc(1.5* var(--standard-spacer));
     list-style: none !important;
     display: flex;
     flex-direction: column;
-    gap: 0.2em;
+    gap: 0;
 }
 
 .project-index li {

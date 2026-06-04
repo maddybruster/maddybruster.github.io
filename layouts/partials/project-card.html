@@ -14,13 +14,17 @@
     {{ range . }}{{ $meta = $meta | append . }}{{ end }}
 {{ end }}
 
+{{ $isIdea := or (in .Params.tags "idea") (in .Params.tags "ideas") }}
+
 {{ if $isDraft }}
-<div class="project-card project-card--draft">
+<div class="project-card project-card--draft{{ if $isIdea }} project-card--idea{{ end }}">
 {{ else }}
-<a href="{{ .RelPermalink }}" class="project-card">
+<a href="{{ .RelPermalink }}" class="project-card{{ if $isIdea }} project-card--idea{{ end }}">
 {{ end }}
-    <div class="project-image{{ if not $featured }} project-image--placeholder{{ end }}">
-        {{ if $featured }}
+    <div class="project-image{{ if and (not $featured) (not $isIdea) }} project-image--placeholder{{ end }}">
+        {{ if $isIdea }}
+            <img src="/images/idea.png" alt="idea" loading="lazy">
+        {{ else if $featured }}
             {{ partial "responsive-image.html" (dict "image" $featured "alt" .Title "sizes" "(max-width: 768px) 100vw, 33vw" "widths" (slice 400 800 1200) "loading" "lazy" "defer" true) }}
         {{ end }}
     </div>

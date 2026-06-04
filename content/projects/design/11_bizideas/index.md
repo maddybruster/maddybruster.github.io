@@ -4,7 +4,6 @@ category: website
 slug: "biz-ideas"
 siteurl: "https://bizideas.biz"
 date: 2025-12-01
-tags: ["ideas"]
 
 ---
 
