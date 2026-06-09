@@ -1,6 +1,6 @@
 ---
 layout: writing
-title: "on co-op design studios"
+title: "on co-op design studios, with Partner & Partners"
 category: writing
 slug: "worker-owned-studio"
 date: 2021-03-01

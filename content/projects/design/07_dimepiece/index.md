@@ -1,10 +1,11 @@
 ---
 layout: writing
-title: "on the .beat watch"
+title: "for Dimepiece magazine: on the .beat watch"
 category: ["design", "writing"]
 slug: "dimepiece"
 date: 2024-03-01
 publication: "Dimepiece Magazine"
+images: on
 
 ---
 

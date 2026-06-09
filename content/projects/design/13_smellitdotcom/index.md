@@ -1,11 +1,9 @@
 ---
 title: "smell.it.com"
-category: website
 slug: "smellit-dotcom"
-siteurl: 
-oneline: "Website for NYC smell-o-vision artist mr hollywood"
+category: website
 status: "draft"
-date: 2026-05-01
+date: 2026-06-30
 ---
 
-coming soon. 
+Website for NYC smell-o-vision artist mr hollywood. coming soon. 

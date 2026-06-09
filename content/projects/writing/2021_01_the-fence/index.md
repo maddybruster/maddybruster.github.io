@@ -1,6 +1,6 @@
 ---
 layout: writing
-title: "On *The Fence* Magazine"
+title: "On *The Fence* Magazine for Eye on Design"
 category: writing
 slug: "the-fence-aiga"
 date: 2022-09-01

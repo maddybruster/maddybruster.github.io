@@ -1,6 +1,7 @@
 baseURL = 'https://maddybruster.com/'
 languageCode = 'en-us'
 title = 'Maddy Bruster'
+buildFuture = true
 
 ignoreFiles = ['\.tmp\.\d+\.[0-9a-f]+$']
 

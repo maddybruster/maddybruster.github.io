@@ -1,7 +1,7 @@
 ---
 title: "susannah-jacob.com"
 date: 2021-09-01
-category: website
+category: web
 slug: "susannah-jacob"
 ---
 

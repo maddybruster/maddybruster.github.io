@@ -1,18 +1,15 @@
 <header class="post-header mb-4">
     <h1 class="post-title">{{ .Params.title | markdownify }}</h1>
     <div class="post-meta">
-        {{ $metaItems := slice }}
         {{ with .Params.category }}
-            {{ if reflect.IsSlice . }}{{ range . }}{{ $metaItems = $metaItems | append . }}{{ end }}{{ else }}{{ $metaItems = $metaItems | append . }}{{ end }}
+        <p class="post-meta-category mb-0">{{ if reflect.IsSlice . }}{{ delimit . ", " }}{{ else }}{{ . }}{{ end }}</p>
         {{ end }}
         {{ with .Params.tags }}
-            {{ range . }}{{ $metaItems = $metaItems | append . }}{{ end }}
-        {{ end }}
-        {{ if $metaItems }}
-        <span class="post-meta-tags">{{ delimit $metaItems ", " }}</span>
+        <p class="post-meta-tags mb-0">tagged: {{ delimit . ", " }}</p>
         {{ end }}
         {{ with .Params.siteurl }}
-        <a href="{{ . }}" target="_blank" rel="noopener" class="post-external">{{ with $.Params.publication }}{{ . | markdownify }}{{ else }}{{ $.Params.siteurl }}{{ end }} ↗</a>
+        {{ $displayURL := . | strings.TrimPrefix "https://www." | strings.TrimPrefix "http://www." | strings.TrimPrefix "https://" | strings.TrimPrefix "http://" }}
+        <a href="{{ . }}" target="_blank" rel="noopener" class="post-external">{{ with $.Params.publication }}{{ . | markdownify }}{{ else }}{{ $displayURL }}{{ end }} ↗</a>
         {{ end }}
     </div>
 </header>

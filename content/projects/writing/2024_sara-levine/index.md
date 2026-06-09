@@ -1,6 +1,6 @@
 ---
 layout: writing
-title: "An interview with Sara Levine"
+title: "the Creative Independent: Sara Levine"
 category: writing
 slug: "sara-levine-interview"
 date: 2024-06-01

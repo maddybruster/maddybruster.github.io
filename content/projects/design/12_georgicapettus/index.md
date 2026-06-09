@@ -1,10 +1,12 @@
 ---
 title: "georgicapettus.com"
-category: website
 slug: "georgicapettus-website"
-siteurl: 
-status: "draft"
-date: 2026-05-01
+siteurl: https://www.georgicapettus.com
+date: 2026-06-09
+category: website
+tags: [web design, web development, astro]
+
+
 ---
 
-coming soon. 
+Website for NYC-based playwright Georgica Pettus, designed with [Sophia Dorfsman](https://sophiadorfsman.info). 

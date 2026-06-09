@@ -68,17 +68,40 @@
 
     <div class="column flex-1">
 
-    <div class="section">
-        <p class="mb-0 text-light">past work (archived)</p>
-        <p class="mb-4 text-light">coming soon...</p>
-        </div>
+    {{ $allProjects := where site.RegularPages "Section" "projects" }}
+    {{ $writing := slice }}
+    {{ range $allProjects }}
+        {{ $cat := .Params.category }}
+        {{ $catMatch := or (eq $cat "writing") (and (reflect.IsSlice $cat) (in $cat "writing")) }}
+        {{ $tagMatch := in .Params.tags "writing" }}
+        {{ if or $catMatch $tagMatch }}
+            {{ $writing = $writing | append . }}
+        {{ end }}
+    {{ end }}
+    {{ $sortedWriting := sort $writing "Date" "desc" }}
 
+    {{ if $sortedWriting }}
+    <div class="section sorted-writing">
+        <p class="mb-2">writing</p>
+        {{ range $sortedWriting }}
+            {{ if ne .Params.status "draft" }}
+            <p class="mb-0"><a href="{{ .RelPermalink }}">{{ .Title | markdownify }}</a></p>
+            {{ end }}
+        {{ end }}
+    </div>
+    {{ end }}
 
       <div class="section">
         <p class="mb-2">teaching</p>
         <p class="mb-0">Spring 2025, Professional Practice, Communications Design</p>
         <p> School of Design, Pratt Institute</p>
       </div>
+
+      <div class="section">
+        <p class="mb-0 text-light">past work (archived)</p>
+        <p class="mb-4 text-light">coming soon...</p>
+    </div>
+
 
 
 
