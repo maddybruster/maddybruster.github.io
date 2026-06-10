@@ -46,7 +46,7 @@
                 {{ if $monthKey }}
                     {{ $isLandscape := gt $image.Width $image.Height }}
                     <div class="life-grid-item{{ if $isLandscape }} is-landscape{{ end }}" data-index="{{ $index }}" data-full="{{ $image.RelPermalink }}" data-month="{{ $monthKey }}" data-month-label="{{ $label }}">
-                        {{ partial "responsive-image.html" (dict "image" $image "alt" "" "class" "life-image w-100" "sizes" (cond $isLandscape "(max-width: 768px) 100vw, 66vw" "(max-width: 768px) 50vw, 33vw") "loading" "lazy" "attrs" (dict "data-full" $image.RelPermalink) "defer" true) }}
+                        {{ partial "responsive-image.html" (dict "image" $image "alt" "" "class" "life-image w-100" "sizes" (cond $isLandscape "(max-width: 768px) 100vw, 66vw" "(max-width: 768px) 50vw, 33vw") "loading" "lazy" "attrs" (dict "data-full" $image.RelPermalink) "defer" true "width" $image.Width "height" $image.Height) }}
                     </div>
                 {{ end }}
             {{ end }}

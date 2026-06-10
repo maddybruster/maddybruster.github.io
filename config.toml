@@ -3,6 +3,9 @@ languageCode = 'en-us'
 title = 'Maddy Bruster'
 buildFuture = true
 
+[params]
+  showDevSections = false
+
 ignoreFiles = ['\.tmp\.\d+\.[0-9a-f]+$']
 
 [markup.goldmark.renderer]

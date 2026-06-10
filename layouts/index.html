@@ -9,10 +9,7 @@
 </head>
 <body id="top" class="my-2 mx-3">
 <div>{{ partial "nav.html" . }}</div>
-<div class="page-layout">
-    {{ partial "project-index.html" . }}
-    <div class="page-content">
-        <main class="content">
+<main class="content">
             <section id="view-default" class="content-section is-active">
                 <div class="fallback-content">
                     <div class="fallback-text">maddybruster.com</div>
@@ -24,14 +21,15 @@
             <section id="view-work" class="content-section">
                 {{ partial "work.html" . }}
             </section>
+            {{ if site.Params.showDevSections }}
+            <section id="view-ideas" class="content-section">
+                {{ partial "ideas.html" . }}
+            </section>
             <section id="view-blog" class="content-section">
                 {{ partial "blog.html" . }}
             </section>
-        </main>
-    </div>
-</div>
-
-{{ partial "mobile-nav.html" . }}
+            {{ end }}
+</main>
 
 <footer class="site-footer">
     <div id="about">{{ partial "footer.html" }}</div>
@@ -91,13 +89,6 @@
                 defaultSection.classList.toggle('is-active', !anyChecked);
             }
 
-            const lifeToggle = toggles.find(t => t.getAttribute('data-target') === 'view-life');
-            const blogToggle = toggles.find(t => t.getAttribute('data-target') === 'view-blog');
-            const projectIndex = document.querySelector('.project-index');
-            if (projectIndex) {
-                const hideIndex = (lifeToggle && lifeToggle.checked) || (blogToggle && blogToggle.checked);
-                projectIndex.style.display = hideIndex ? 'none' : '';
-            }
         };
         
         function hydrateImages(container) {

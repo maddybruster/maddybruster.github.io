@@ -6,6 +6,8 @@
 {{- $fetchpriority := .fetchpriority | default "" -}}
 {{- $attrs := .attrs | default dict -}}
 {{- $defer := .defer | default false -}}
+{{- $width := .width | default 0 -}}
+{{- $height := .height | default 0 -}}
 {{- $placeholder := "data:image/gif;base64,R0lGODlhAQABAAAAACw=" -}}
 
 {{- if not $image -}}
@@ -13,11 +15,11 @@
 {{- end -}}
 
 {{- if $defer -}}
-<img src="{{ $placeholder }}" data-src="{{ $image.RelPermalink }}" alt="{{ $alt }}" class="{{ $class }}" loading="{{ $loading }}" decoding="{{ $decoding }}"
+<img src="{{ $placeholder }}" data-src="{{ $image.RelPermalink }}" alt="{{ $alt }}" class="{{ $class }}" loading="{{ $loading }}" decoding="{{ $decoding }}"{{- if and $width $height }} width="{{ $width }}" height="{{ $height }}"{{- end }}
     {{- if $fetchpriority }} fetchpriority="{{ $fetchpriority }}"{{- end -}}
     {{- range $key, $value := $attrs }} {{ $key }}="{{ $value }}"{{- end -}} />
 {{- else -}}
-<img src="{{ $image.RelPermalink }}" alt="{{ $alt }}" class="{{ $class }}" loading="{{ $loading }}" decoding="{{ $decoding }}"
+<img src="{{ $image.RelPermalink }}" alt="{{ $alt }}" class="{{ $class }}" loading="{{ $loading }}" decoding="{{ $decoding }}"{{- if and $width $height }} width="{{ $width }}" height="{{ $height }}"{{- end }}
     {{- if $fetchpriority }} fetchpriority="{{ $fetchpriority }}"{{- end -}}
     {{- range $key, $value := $attrs }} {{ $key }}="{{ $value }}"{{- end -}} />
 {{- end -}}

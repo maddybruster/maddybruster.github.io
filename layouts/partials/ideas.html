@@ -1,0 +1,18 @@
+{{ $ideas := where site.RegularPages "Section" "ideas" }}
+{{ $sorted := sort $ideas "Date" "desc" }}
+{{ $total := len $sorted }}
+
+{{ if $sorted }}
+<div class="blog-centered">
+<ul class="ideas-list">
+    {{ range $index, $page := $sorted }}
+    <li class="ideas-list-item">
+        <a href="{{ $page.RelPermalink }}" class="ideas-list-link">
+            <span class="ideas-list-title">{{ $page.Title }}</span>
+            <span class="ideas-list-num">{{ printf "%03d" (sub $total $index) }}</span>
+        </a>
+    </li>
+    {{ end }}
+</ul>
+</div>
+{{ end }}

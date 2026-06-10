@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog — {{ .Site.Title }}</title>
+    <title>Ideas — {{ .Site.Title }}</title>
     <link rel="stylesheet" href="{{ .Site.BaseURL }}main.css">
     <link rel="stylesheet" href="{{ .Site.BaseURL }}utility.css">
 </head>
@@ -11,11 +11,15 @@
 {{ partial "nav.html" . }}
 <div class="blog-layout">
     <main class="blog-centered">
-        <ul class="blog-list">
-            {{ range .Pages.ByDate.Reverse }}
-            <li class="blog-list-item">
-                <a href="{{ .RelPermalink }}" class="blog-list-title">{{ .Title }}</a>
-                <span class="blog-list-date">{{ .Date.Format "01.02.06" }}</span>
+        {{ $ideas := .Pages.ByDate.Reverse }}
+        {{ $total := len $ideas }}
+        <ul class="ideas-list">
+            {{ range $index, $page := $ideas }}
+            <li class="ideas-list-item{{ if eq $index 0 }} ideas-list-item--active{{ end }}">
+                <a href="{{ $page.RelPermalink }}" class="ideas-list-link">
+                    <span class="ideas-list-title">{{ $page.Title }}</span>
+                    <span class="ideas-list-num">{{ printf "%03d" (sub $total $index) }}</span>
+                </a>
             </li>
             {{ end }}
         </ul>

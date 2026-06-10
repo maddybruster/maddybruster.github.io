@@ -2,7 +2,7 @@
 {{ $featured := index $images 0 }}
 {{ $isDraft := eq .Params.status "draft" }}
 
-{{ $isIdea := or (in .Params.tags "idea") (in .Params.tags "ideas") }}
+{{ $isIdea := or (in .Params.tags "idea") (in .Params.tags "ideas") (eq .Section "ideas") }}
 
 {{ if $isDraft }}
 <div class="project-card project-card--draft{{ if $isIdea }} project-card--idea{{ end }}">
