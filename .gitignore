@@ -12,3 +12,6 @@ content/feed/.compression-mark
 # OS
 .DS_Store
 Thumbs.db
+
+# Local env (contains secrets)
+.env

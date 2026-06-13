@@ -1,0 +1,7 @@
+[build]
+  command = "bash build.sh"
+  publish = "public"
+
+[build.environment]
+  HUGO_VERSION = "0.110.0"
+  NODE_VERSION = "18"

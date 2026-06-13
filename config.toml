@@ -8,6 +8,7 @@ buildFuture = true
 
 ignoreFiles = ['\.tmp\.\d+\.[0-9a-f]+$']
 
+
 [markup.goldmark.renderer]
   unsafe = true
 
@@ -20,4 +21,6 @@ ignoreFiles = ['\.tmp\.\d+\.[0-9a-f]+$']
 
 [permalinks]
   projects = "/:slug/"
+
+
 

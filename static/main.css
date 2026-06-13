@@ -1253,6 +1253,11 @@ margin-right: calc(1.5* var(--standard-spacer));
     }
 }
 
+#view-work,
+#view-life {
+    padding-top: var(--nav-height);
+}
+
 @media (min-width: 768px) {
     :root {
         --sidebar-width: 22rem;
