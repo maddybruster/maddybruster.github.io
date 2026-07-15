@@ -72,6 +72,8 @@
     .item-img-card-insert { position: absolute; bottom: 3px; right: 3px; background: rgba(0,0,0,0.6); color: #fff; border: none; border-radius: 2px; font-size: 9px; padding: 2px 5px; cursor: pointer; opacity: 0; line-height: 1; letter-spacing: 0.02em; }
     .item-img-card:hover .item-img-card-insert { opacity: 1; }
     .item-img-card-insert:hover { background: #111; }
+    .item-img-card[draggable=true] { cursor: grab; }
+    .item-img-card.dragging { opacity: 0.4; cursor: grabbing; }
     .cover-badge { position: absolute; bottom: 3px; left: 3px; background: rgba(0,0,0,0.55); color: #fff; font-size: 9px; padding: 1px 4px; border-radius: 2px; text-transform: uppercase; letter-spacing: 0.04em; pointer-events: none; }
     .item-img-status { display: block; font-size: 11px; color: #888; margin-top: 0.5rem; min-height: 1em; }
     .item-img-status.ok  { color: #007a33; }
@@ -187,7 +189,8 @@
 const OWNER  = 'maddybruster';
 const REPO   = 'maddybruster.github.io';
 const BRANCH = 'main';
-const GH_API = `https://api.github.com/repos/${OWNER}/${REPO}/contents`;
+const GH_REPO = `https://api.github.com/repos/${OWNER}/${REPO}`;
+const GH_API = `${GH_REPO}/contents`;
 
 /* ── State ── */
 const S = {
@@ -253,6 +256,41 @@ async function ghDelete(path, sha) {
   });
   if (r.status === 401) { logout(); return null; }
   return r.ok ? {} : null;
+}
+
+/* Commit several file changes in ONE commit via the Git Data API.
+   ops: [{ path, sha }]           create/overwrite path pointing at an existing blob (rename = reuse sha)
+        [{ path, content }]       create/overwrite path with new text content
+        [{ path, remove: true }]  delete path
+   Returns true on success, or an error string. */
+async function ghGit(method, endpoint, body) {
+  const r = await fetch(`${GH_REPO}/git/${endpoint}`, {
+    method, headers: ghHeaders(), body: body ? JSON.stringify(body) : undefined,
+  });
+  if (r.status === 401) { logout(); return null; }
+  const j = await r.json().catch(() => ({}));
+  return r.ok ? j : { error: j.message || `git ${endpoint} failed (${r.status})` };
+}
+async function ghCommitTree(ops, message) {
+  const ref = await ghGit('GET', `ref/heads/${BRANCH}`);
+  if (!ref || ref.error) return ref?.error || 'could not read branch';
+  const parent = ref.object.sha;
+  const commit = await ghGit('GET', `commits/${parent}`);
+  if (!commit || commit.error) return commit?.error || 'could not read commit';
+  const tree = ops.map(o => {
+    const e = { path: o.path, mode: '100644', type: 'blob' };
+    if (o.remove)            e.sha = null;
+    else if (o.content != null) e.content = o.content;
+    else                     e.sha = o.sha;
+    return e;
+  });
+  const newTree = await ghGit('POST', 'trees', { base_tree: commit.tree.sha, tree });
+  if (!newTree || newTree.error) return newTree?.error || 'could not create tree';
+  const newCommit = await ghGit('POST', 'commits', { message, tree: newTree.sha, parents: [parent] });
+  if (!newCommit || newCommit.error) return newCommit?.error || 'could not create commit';
+  const upd = await ghGit('PATCH', `refs/heads/${BRANCH}`, { sha: newCommit.sha });
+  if (!upd || upd.error) return upd?.error || 'could not update branch';
+  return true;
 }
 
 /* ── Auth ── */
@@ -403,13 +441,17 @@ function backToList() {
 /* ── Inline images section (for directory-based posts) ── */
 function itemImagesHtml() {
   const saved = !!S.item;
+  const canOrder = S.tab === 'design';
   return `
     <div class="images-section">
       <div class="images-section-header">
         <label>images</label>
-        <button class="btn btn-sm" ${saved ? `onclick="triggerItemImg()"` : 'disabled title="save first to add images"'}>+ add image</button>
+        <div style="display:flex;gap:0.4rem">
+          ${canOrder ? `<button class="btn btn-sm" id="save-order-btn" onclick="saveImageOrder()" disabled title="drag images to reorder, then save">save order</button>` : ''}
+          <button class="btn btn-sm" ${saved ? `onclick="triggerItemImg()"` : 'disabled title="save first to add images"'}>+ add image</button>
+        </div>
       </div>
-      <p style="font-size:10px;color:#bbb;margin:-0.4rem 0 0.6rem">click a photo to set cover · hover for <b>+ body</b> to insert it into the content at your cursor</p>
+      <p style="font-size:10px;color:#bbb;margin:-0.4rem 0 0.6rem">${canOrder ? '<b>drag</b> to reorder · ' : ''}click a photo to set cover · hover for <b>+ body</b> to insert it into the content at your cursor</p>
       <input type="file" id="item-img-file" accept="image/*" style="display:none"
         onchange="if(this.files[0])handleItemImgSelect(this.files[0])">
       <div class="item-img-grid" id="item-img-grid">
@@ -439,12 +481,18 @@ async function loadItemImages() {
     return;
   }
 
+  const canOrder = S.tab === 'design';
+  S.imgOrder = images.map(f => f.name);   // remember starting order to detect changes
+  S.imgSha = {};                          // name -> blob sha, for atomic renames
+  images.forEach(f => { S.imgSha[f.name] = f.sha; });
+
   grid.innerHTML = '';
   images.forEach(f => {
     const card = document.createElement('div');
     card.className = 'item-img-card' + (f.name === cover ? ' is-cover' : '');
     card.dataset.name = f.name;
-    card.title = `click to set as cover`;
+    card.title = canOrder ? `drag to reorder · click to set as cover` : `click to set as cover`;
+    if (canOrder) card.draggable = true;
     const nameEsc = f.name.replace(/'/g, "\\'");
     card.innerHTML = `
       <img src="${f.download_url}" loading="lazy" alt="">
@@ -464,8 +512,101 @@ async function loadItemImages() {
         if (!isCover && badge) badge.remove();
       });
     });
+    if (canOrder) {
+      card.addEventListener('dragstart', e => {
+        card.classList.add('dragging');
+        if (e.dataTransfer) { e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', f.name); }
+      });
+      card.addEventListener('dragend', () => { card.classList.remove('dragging'); refreshOrderBtn(); });
+    }
     grid.appendChild(card);
   });
+
+  if (canOrder && !grid.dataset.dndBound) {
+    grid.dataset.dndBound = '1';
+    grid.addEventListener('dragover', e => {
+      e.preventDefault();
+      const dragging = grid.querySelector('.item-img-card.dragging');
+      if (!dragging) return;
+      const after = dragAfterElement(grid, e.clientX, e.clientY);
+      if (after == null) grid.appendChild(dragging);
+      else if (after !== dragging) grid.insertBefore(dragging, after);
+    });
+  }
+}
+
+/* Reading-order (row-major) hit test: the first card the cursor sits before. */
+function dragAfterElement(grid, x, y) {
+  const cards = [...grid.querySelectorAll('.item-img-card:not(.dragging)')];
+  for (const c of cards) {
+    const r = c.getBoundingClientRect();
+    if (y < r.bottom && (y < r.top || x < r.left + r.width / 2)) return c;
+  }
+  return null;
+}
+
+function currentImgOrder() {
+  return [...document.querySelectorAll('#item-img-grid .item-img-card')].map(c => c.dataset.name);
+}
+
+/* Enable "save order" only when the on-screen order differs from what we loaded. */
+function refreshOrderBtn() {
+  const btn = document.getElementById('save-order-btn');
+  if (!btn) return;
+  const now = currentImgOrder();
+  const changed = (S.imgOrder || []).some((n, i) => n !== now[i]);
+  btn.disabled = !changed;
+}
+
+function setItemImgStatus(type, msg) {
+  const el = document.getElementById('item-img-status');
+  if (el) { el.className = 'item-img-status' + (type ? ' ' + type : ''); el.textContent = msg; }
+}
+
+/* Persist the on-screen order by renaming images with NN_ position prefixes.
+   Hugo orders gallery images by filename, so the prefix is what sticks.
+   Done as a single atomic commit that also repoints cover + body references. */
+async function saveImageOrder() {
+  const dir = getItemDir();
+  if (!dir || !S.item?.path) return;
+  const order = currentImgOrder();
+
+  const rename = {};   // old name -> new name (changed only)
+  const finalNames = order.map((name, i) => {
+    const nn = String(i + 1).padStart(2, '0');
+    let base = name.replace(/^\d+[A-Za-z]?[_-]/, '');          // drop any existing order prefix
+    if (!base || base[0] === '.') base = 'image' + name.slice(name.lastIndexOf('.'));
+    return `${nn}_${base}`;
+  });
+  order.forEach((o, i) => { if (o !== finalNames[i]) rename[o] = finalNames[i]; });
+  if (!Object.keys(rename).length) { setItemImgStatus('', 'order unchanged'); refreshOrderBtn(); return; }
+
+  if (!confirm('Reorder images? This commits now and reloads the post — save any unsaved text changes first.')) return;
+  setItemImgStatus('', 'reordering…');
+
+  // Repoint cover + body references (bounded by quotes / markdown parens to avoid partial hits).
+  const idx = await ghRead(S.item.path);
+  if (!idx?.decoded) { setItemImgStatus('err', 'could not read post'); return; }
+  let content = idx.decoded;
+  Object.entries(rename).forEach(([o, n]) => {
+    content = content.split(`](${o})`).join(`](${n})`).split(`"${o}"`).join(`"${n}"`);
+  });
+
+  // Build one commit: create renamed blobs (reuse existing sha), delete the old paths
+  // that aren't being reused (swap-safe), and rewrite index.md.
+  const newPaths = new Set(Object.values(rename).map(n => `${dir}/${n}`));
+  const ops = [];
+  Object.entries(rename).forEach(([o, n]) => ops.push({ path: `${dir}/${n}`, sha: S.imgSha[o] }));
+  Object.keys(rename).forEach(o => {
+    const p = `${dir}/${o}`;
+    if (!newPaths.has(p)) ops.push({ path: p, remove: true });
+  });
+  ops.push({ path: S.item.path, content });
+
+  const res = await ghCommitTree(ops, `admin: reorder images in ${dir.split('/').pop()}`);
+  if (res !== true) { setItemImgStatus('err', res || 'reorder failed'); return; }
+  setItemImgStatus('ok', 'order saved ✓');
+  setTimeout(() => openItem(S.item.path), 700);   // reload from new committed state
 }
 
 function triggerItemImg() {
