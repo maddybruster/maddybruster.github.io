@@ -1105,6 +1105,14 @@ margin-right: calc(1.5* var(--standard-spacer));
     margin-bottom: 0;
 }
 
+.post-content img,
+.post-body-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: var(--space-3) 0;
+}
+
 .post-content h2 {
     font-size: var(--font-size-large);
     font-weight: inherit;

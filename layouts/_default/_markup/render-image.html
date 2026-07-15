@@ -1,0 +1,13 @@
+{{- $dest := .Destination -}}
+{{- $alt := .Text | plainify -}}
+{{- $isExternal := or (strings.HasPrefix $dest "http://") (strings.HasPrefix $dest "https://") (strings.HasPrefix $dest "//") -}}
+{{- if $isExternal -}}
+<img src="{{ $dest | safeURL }}" alt="{{ $alt }}"{{ with .Title }} title="{{ . }}"{{ end }} class="post-body-img" loading="lazy" decoding="async" />
+{{- else -}}
+	{{- $res := .Page.Resources.GetMatch $dest -}}
+	{{- if $res -}}
+		{{ partial "responsive-image.html" (dict "image" $res "alt" $alt "class" "post-body-img" "loading" "lazy") }}
+	{{- else -}}
+<img src="{{ $dest | safeURL }}" alt="{{ $alt }}"{{ with .Title }} title="{{ . }}"{{ end }} class="post-body-img" loading="lazy" decoding="async" />
+	{{- end -}}
+{{- end -}}

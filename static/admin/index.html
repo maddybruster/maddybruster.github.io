@@ -69,6 +69,9 @@
     .item-img-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .item-img-card-del { position: absolute; top: 3px; right: 3px; background: rgba(0,0,0,0.55); color: #fff; border: none; border-radius: 2px; width: 18px; height: 18px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; opacity: 0; line-height: 1; padding: 0; }
     .item-img-card:hover .item-img-card-del { opacity: 1; }
+    .item-img-card-insert { position: absolute; bottom: 3px; right: 3px; background: rgba(0,0,0,0.6); color: #fff; border: none; border-radius: 2px; font-size: 9px; padding: 2px 5px; cursor: pointer; opacity: 0; line-height: 1; letter-spacing: 0.02em; }
+    .item-img-card:hover .item-img-card-insert { opacity: 1; }
+    .item-img-card-insert:hover { background: #111; }
     .cover-badge { position: absolute; bottom: 3px; left: 3px; background: rgba(0,0,0,0.55); color: #fff; font-size: 9px; padding: 1px 4px; border-radius: 2px; text-transform: uppercase; letter-spacing: 0.04em; pointer-events: none; }
     .item-img-status { display: block; font-size: 11px; color: #888; margin-top: 0.5rem; min-height: 1em; }
     .item-img-status.ok  { color: #007a33; }
@@ -396,6 +399,7 @@ function itemImagesHtml() {
         <label>images</label>
         <button class="btn btn-sm" ${saved ? `onclick="triggerItemImg()"` : 'disabled title="save first to add images"'}>+ add image</button>
       </div>
+      <p style="font-size:10px;color:#bbb;margin:-0.4rem 0 0.6rem">click a photo to set cover · hover for <b>+ body</b> to insert it into the content at your cursor</p>
       <input type="file" id="item-img-file" accept="image/*" style="display:none"
         onchange="if(this.files[0])handleItemImgSelect(this.files[0])">
       <div class="item-img-grid" id="item-img-grid">
@@ -431,13 +435,16 @@ async function loadItemImages() {
     card.className = 'item-img-card' + (f.name === cover ? ' is-cover' : '');
     card.dataset.name = f.name;
     card.title = `click to set as cover`;
+    const nameEsc = f.name.replace(/'/g, "\\'");
     card.innerHTML = `
       <img src="${f.download_url}" loading="lazy" alt="">
       ${f.name === cover ? '<span class="cover-badge">cover</span>' : ''}
+      <button class="item-img-card-insert" title="insert into body at cursor" onmousedown="insertIntoBody('${nameEsc}');return false">+ body</button>
       <button class="item-img-card-del" title="delete" onmousedown="deleteItemImg('${f.path}','${f.sha}',event);return false">×</button>
     `;
     card.addEventListener('click', e => {
       if (e.target.classList.contains('item-img-card-del')) return;
+      if (e.target.classList.contains('item-img-card-insert')) return;
       setField('f-cover', f.name);
       document.querySelectorAll('.item-img-card').forEach(c => {
         const isCover = c.dataset.name === f.name;
@@ -481,6 +488,21 @@ async function deleteItemImg(path, sha, e) {
   if (!r) { alert('delete failed'); return; }
   if (val('f-cover') === name) setField('f-cover', '');
   await loadItemImages();
+}
+
+/* Insert a markdown image reference into the body at the cursor */
+function insertIntoBody(name) {
+  const ta = document.getElementById('f-body');
+  if (!ta) return;
+  const snippet = `\n![](${name})\n`;
+  const start = ta.selectionStart ?? ta.value.length;
+  const end   = ta.selectionEnd ?? ta.value.length;
+  ta.value = ta.value.slice(0, start) + snippet + ta.value.slice(end);
+  const pos = start + snippet.length;
+  ta.focus();
+  ta.setSelectionRange(pos, pos);
+  const status = document.getElementById('item-img-status');
+  if (status) { status.className = 'item-img-status ok'; status.textContent = `inserted ![](${name}) — remember to save`; }
 }
 
 /* ── Blog ── */
