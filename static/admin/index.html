@@ -258,11 +258,19 @@ async function ghUpload(base64, path, message, sha) {
   return r.json();
 }
 async function ghDelete(path, sha) {
-  const r = await fetch(`${GH_API}/${path}`, {
+  const del = (useSha) => fetch(`${GH_API}/${path}`, {
     method: 'DELETE', headers: ghHeaders(),
-    body: JSON.stringify({ message: `admin: delete ${path}`, sha, branch: BRANCH }),
+    body: JSON.stringify({ message: `admin: delete ${path}`, sha: useSha, branch: BRANCH }),
   });
+  let r = await del(sha);
+  // 409/422 = the sha we held is stale (file changed since load). Re-fetch and retry.
+  if (r.status === 409 || r.status === 422) {
+    const cur = await ghRead(path);
+    if (cur?.sha) r = await del(cur.sha);
+    else return {};   // file is already gone → nothing to delete
+  }
   if (r.status === 401) { logout(); return null; }
+  if (r.status === 404) return {};   // already deleted
   return r.ok ? {} : null;
 }
 
