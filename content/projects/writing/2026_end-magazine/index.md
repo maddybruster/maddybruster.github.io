@@ -9,6 +9,3 @@ tags: ["fiction"]
 Five stories <br> 
 \"My Punishment,\" \"Trivial Pursuit,\" \"The Rules,\" \"The Wrong Track,\" \"Dead Ends\"<br> 
 for Issue 5, \"Shame\"
-
-
-![](my_punishment_01.png)
