@@ -241,11 +241,19 @@ async function ghSave(path, content, sha, message) {
   if (r.status === 401) { logout(); return null; }
   return r.json();
 }
-async function ghUpload(base64, path, message) {
-  const r = await fetch(`${GH_API}/${path}`, {
-    method: 'PUT', headers: ghHeaders(),
-    body: JSON.stringify({ message, content: base64, branch: BRANCH }),
-  });
+async function ghUpload(base64, path, message, sha) {
+  const put = (useSha) => {
+    const body = { message, content: base64, branch: BRANCH };
+    if (useSha) body.sha = useSha;
+    return fetch(`${GH_API}/${path}`, { method: 'PUT', headers: ghHeaders(), body: JSON.stringify(body) });
+  };
+  let r = await put(sha);
+  // 422 = path already exists and no sha was supplied; 409 = the sha we had is stale.
+  // Re-fetch the current sha and retry as an overwrite so re-uploading can't dead-end.
+  if (r.status === 422 || r.status === 409) {
+    const cur = await ghRead(path);
+    if (cur?.sha) r = await put(cur.sha);
+  }
   if (r.status === 401) { logout(); return null; }
   return r.json();
 }
@@ -447,8 +455,8 @@ function itemImagesHtml() {
       <div class="images-section-header">
         <label>images</label>
         <div style="display:flex;gap:0.4rem">
-          ${canOrder ? `<button class="btn btn-sm" id="save-order-btn" onclick="saveImageOrder()" disabled title="drag images to reorder, then save">save order</button>` : ''}
-          <button class="btn btn-sm" ${saved ? `onclick="triggerItemImg()"` : 'disabled title="save first to add images"'}>+ add image</button>
+          ${canOrder ? `<button type="button" class="btn btn-sm" id="save-order-btn" onclick="saveImageOrder()" disabled title="drag images to reorder, then save">save order</button>` : ''}
+          <button type="button" class="btn btn-sm" id="add-img-btn" ${saved ? `onclick="triggerItemImg()"` : 'disabled title="save first to add images"'}>+ add image</button>
         </div>
       </div>
       <p style="font-size:10px;color:#bbb;margin:-0.4rem 0 0.6rem">${canOrder ? '<b>drag</b> to reorder · ' : ''}click a photo to set cover · hover for <b>+ body</b> to insert it into the content at your cursor</p>
@@ -620,10 +628,10 @@ async function handleItemImgSelect(file) {
   const setS = (type, msg) => { if (status) { status.className = 'item-img-status' + (type ? ' ' + type : ''); status.textContent = msg; } };
   setS('', 'resizing…');
   try {
-    const base64   = await resizeToBase64(file, 1200, 0.82);
-    const filename = file.name.toLowerCase().replace(/[^a-z0-9._-]/g, '-');
+    const { data, ext } = await resizeToBase64(file, 2000, 0.92);   // preserve format, high quality
+    const filename = file.name.toLowerCase().replace(/[^a-z0-9._-]/g, '-').replace(/\.[^.]+$/, '') + '.' + ext;
     setS('', 'uploading…');
-    const r = await ghUpload(base64, `${dir}/${filename}`, `admin: add image ${filename}`);
+    const r = await ghUpload(data, `${dir}/${filename}`, `admin: add image ${filename}`);
     if (!r || r.message) { setS('err', r?.message || 'upload failed'); return; }
     setS('ok', `${filename} added ✓`);
     document.getElementById('item-img-file').value = '';
@@ -791,7 +799,7 @@ async function saveProject() {
     if (!r || r.message) { setStatus('err', r?.message || 'error'); return; }
     S.item = { path, sha: r.content?.sha, rawFm: fmText };
     // enable image upload if this was a new item
-    const addBtn = document.querySelector('#content-form .images-section .btn-sm');
+    const addBtn = document.getElementById('add-img-btn');
     if (addBtn) { addBtn.disabled = false; addBtn.setAttribute('onclick', 'triggerItemImg()'); }
     const grid = document.getElementById('item-img-grid');
     if (grid?.querySelector('span')) loadItemImages();
@@ -1002,11 +1010,11 @@ async function doUpload() {
   const btn = document.getElementById('upload-btn');
   btn.disabled = true; setStatus('', 'resizing…');
   try {
-    const base64   = await resizeToBase64(_uploadFile, 1200, 0.82);
+    const { data }  = await resizeToBase64(_uploadFile, 1600, 0.85, 'image/jpeg');   // life photos → jpeg
     const date     = document.getElementById('img-date').value;
     const filename = await pickFilename(date);
     setStatus('', 'uploading…');
-    const r = await ghUpload(base64, `content/life/${filename}`, `admin: add ${filename}`);
+    const r = await ghUpload(data, `content/life/${filename}`, `admin: add ${filename}`);
     if (!r || r.message) { setStatus('err', r?.message || 'upload failed'); btn.disabled = false; return; }
     setStatus('ok', `saved as ${filename} ✓`);
     _uploadFile = null;
@@ -1025,7 +1033,10 @@ async function pickFilename(date) {
 }
 
 /* ── Shared image resize ── */
-function resizeToBase64(file, maxPx, quality) {
+/* Resize (only downscales) and encode. Preserves the source format so PNG design
+   work stays lossless; pass forceMime to always emit a given type (e.g. life photos
+   → jpeg). Resolves { data: base64, ext } so the caller writes a matching extension. */
+function resizeToBase64(file, maxPx, quality, forceMime) {
   return new Promise((resolve, reject) => {
     const img = new Image(), url = URL.createObjectURL(file);
     img.onload = () => {
@@ -1038,12 +1049,17 @@ function resizeToBase64(file, maxPx, quality) {
       canvas.width = w; canvas.height = h;
       canvas.getContext('2d').drawImage(img, 0, 0, w, h);
       URL.revokeObjectURL(url);
+      const mime = forceMime
+        || (file.type === 'image/png'  ? 'image/png'
+          : file.type === 'image/webp' ? 'image/webp'
+          : 'image/jpeg');
+      const ext = mime === 'image/png' ? 'png' : mime === 'image/webp' ? 'webp' : 'jpg';
       canvas.toBlob(blob => {
         if (!blob) { reject(new Error('resize failed')); return; }
         const reader = new FileReader();
-        reader.onload = e => resolve(e.target.result.split(',')[1]);
+        reader.onload = e => resolve({ data: e.target.result.split(',')[1], ext });
         reader.readAsDataURL(blob);
-      }, 'image/jpeg', quality);
+      }, mime, quality);
     };
     img.onerror = () => reject(new Error('image load failed'));
     img.src = url;
