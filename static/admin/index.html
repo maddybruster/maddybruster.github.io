@@ -222,9 +222,19 @@ async function ghRead(path) {
   return data;
 }
 async function ghSave(path, content, sha, message) {
-  const body = { message: message || `admin: update ${path}`, content: btoa(unescape(encodeURIComponent(content))), branch: BRANCH };
-  if (sha) body.sha = sha;
-  const r = await fetch(`${GH_API}/${path}`, { method: 'PUT', headers: ghHeaders(), body: JSON.stringify(body) });
+  const encoded = btoa(unescape(encodeURIComponent(content)));
+  const put = (useSha) => {
+    const body = { message: message || `admin: update ${path}`, content: encoded, branch: BRANCH };
+    if (useSha) body.sha = useSha;
+    return fetch(`${GH_API}/${path}`, { method: 'PUT', headers: ghHeaders(), body: JSON.stringify(body) });
+  };
+  let r = await put(sha);
+  // 409 = the sha we held is stale (file changed since we loaded it). Re-fetch the
+  // current sha and retry once so a save can't get permanently wedged.
+  if (r.status === 409) {
+    const cur = await ghRead(path);
+    if (cur?.sha) r = await put(cur.sha);
+  }
   if (r.status === 401) { logout(); return null; }
   return r.json();
 }
@@ -374,8 +384,8 @@ async function loadItemsList(tab) {
 async function openItem(path) {
   const r = await ghRead(path);
   if (!r?.decoded) { alert('Failed to load file.'); return; }
-  S.item = { path, sha: r.sha };
-  const { fm, body } = parseMd(r.decoded);
+  const { fm, body, rawFm } = parseMd(r.decoded);
+  S.item = { path, sha: r.sha, rawFm };
   if      (S.tab === 'blog')                           renderBlogForm(fm, body, path);
   else if (S.tab === 'design' || S.tab === 'writing')  renderProjectForm(fm, body);
 }
@@ -539,12 +549,14 @@ async function saveBlog() {
   if (!title || !date) { setStatus('err', 'title and date required'); return; }
   const fmLines = [`title: "${title}"`, `date: ${date}`, `draft: ${draft}`];
   if (cover) fmLines.push(`cover: "${cover}"`);
-  const content = `---\n${fmLines.join('\n')}\n---\n\n${body.trim()}\n`;
+  fmLines.push(...extraFmLines(['title','date','draft','cover']));
+  const fmText = fmLines.join('\n');
+  const content = `---\n${fmText}\n---\n\n${body.trim()}\n`;
   const path = S.item?.path || `content/blog/${slug}.md`;
   setStatus('', 'saving…');
   const r = await ghSave(path, content, S.item?.sha, `admin: ${S.item ? 'update' : 'add'} post ${slug}`);
   if (!r || r.message) { setStatus('err', r?.message || 'error'); return; }
-  S.item = { path, sha: r.content?.sha };
+  S.item = { path, sha: r.content?.sha, rawFm: fmText };
   setStatus('ok', 'saved ✓');
 }
 
@@ -590,6 +602,19 @@ function renderProjectForm(fm, body) {
   initTagInput(parseTags(fm.tags));
 }
 
+/* Preserve top-level frontmatter keys the form doesn't manage (e.g. layout,
+   publication) so saving never silently drops fields it didn't render. */
+function extraFmLines(managedKeys) {
+  const raw = S.item?.rawFm;
+  if (!raw) return [];
+  const managed = new Set(managedKeys);
+  return raw.split(/\r?\n/).filter(line => {
+    if (!line.trim() || /^\s/.test(line)) return false;   // skip blanks + indented sub-lines
+    const idx = line.indexOf(':');
+    return idx > 0 && !managed.has(line.slice(0, idx).trim());
+  });
+}
+
 async function saveProject() {
   const title   = val('f-title'), date = val('f-date');
   const cat     = val('f-category') || S.tab;
@@ -602,7 +627,9 @@ async function saveProject() {
   if (siteurl)       fmLines.push(`siteurl: "${siteurl}"`);
   if (status)        fmLines.push(`status: ${status}`);
   if (S.tags.length) fmLines.push(`tags: [${S.tags.map(t => `"${t}"`).join(', ')}]`);
-  const content = `---\n${fmLines.join('\n')}\n---\n\n${body.trim()}\n`;
+  fmLines.push(...extraFmLines(['title','date','category','slug','cover','siteurl','status','tags']));
+  const fmText = fmLines.join('\n');
+  const content = `---\n${fmText}\n---\n\n${body.trim()}\n`;
 
   const existingCat    = S.item?.path.includes('/writing/') ? 'writing' : 'design';
   const categoryChanged = S.item && cat !== existingCat;
@@ -614,14 +641,14 @@ async function saveProject() {
     if (!r || r.message) { setStatus('err', r?.message || 'error'); return; }
     setStatus('', 'moving…');
     await ghDelete(S.item.path, S.item.sha);
-    S.item = { path: newPath, sha: r.content?.sha };
+    S.item = { path: newPath, sha: r.content?.sha, rawFm: fmText };
     S.tab  = cat;
     document.querySelectorAll('.section-link').forEach(t => t.classList.toggle('active', t.dataset.tab === cat));
   } else {
     const path = S.item?.path || newPath;
     const r    = await ghSave(path, content, S.item?.sha, `admin: ${S.item ? 'update' : 'add'} project ${slug}`);
     if (!r || r.message) { setStatus('err', r?.message || 'error'); return; }
-    S.item = { path, sha: r.content?.sha };
+    S.item = { path, sha: r.content?.sha, rawFm: fmText };
     // enable image upload if this was a new item
     const addBtn = document.querySelector('#content-form .images-section .btn-sm');
     if (addBtn) { addBtn.disabled = false; addBtn.setAttribute('onclick', 'triggerItemImg()'); }
