@@ -148,8 +148,7 @@
 
     <!-- Left nav -->
     <nav class="nav-panel">
-      <button class="section-link active" data-tab="ideas">ideas</button>
-      <button class="section-link" data-tab="blog">blog</button>
+      <button class="section-link active" data-tab="blog">blog</button>
       <div class="nav-group-label">projects</div>
       <button class="section-link" data-tab="design">design</button>
       <button class="section-link" data-tab="writing">writing</button>
@@ -190,7 +189,7 @@ const GH_API = `https://api.github.com/repos/${OWNER}/${REPO}/contents`;
 /* ── State ── */
 const S = {
   token:      sessionStorage.getItem('admin_token') || '',
-  tab:        'ideas',
+  tab:        'blog',
   item:       null,
   bioFm:      '',
   lifePhoto:  null,
@@ -254,7 +253,7 @@ async function tryLogin(token) {
 function showAdmin() {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('admin-shell').classList.add('active');
-  switchTab('ideas');
+  switchTab('blog');
 }
 function logout() {
   sessionStorage.removeItem('admin_token');
@@ -324,17 +323,6 @@ async function loadItemsList(tab) {
   const tagSet = new Set(S.allTags);
   let groups = [];
 
-  if (tab === 'ideas') {
-    const r = await ghList('content/ideas');
-    const dirs = (r || []).filter(f => f.type === 'dir' && !f.name.startsWith('_'));
-    const items = await Promise.all(dirs.map(async f => {
-      const path = `content/ideas/${f.name}/index.md`;
-      const { title, date } = await fetchMeta(path);
-      return { title: title || f.name.replace(/-/g, ' '), date, path };
-    }));
-    items.sort((a, b) => b.date.localeCompare(a.date));
-    groups = [{ items }];
-  }
   if (tab === 'blog') {
     const r = await ghList('content/blog');
     const files = (r || []).filter(f => f.type === 'file' && f.name.endsWith('.md') && f.name !== '_index.md');
@@ -385,16 +373,14 @@ async function openItem(path) {
   if (!r?.decoded) { alert('Failed to load file.'); return; }
   S.item = { path, sha: r.sha };
   const { fm, body } = parseMd(r.decoded);
-  if      (S.tab === 'ideas')                          renderIdeaForm(fm, body);
-  else if (S.tab === 'blog')                           renderBlogForm(fm, body, path);
+  if      (S.tab === 'blog')                           renderBlogForm(fm, body, path);
   else if (S.tab === 'design' || S.tab === 'writing')  renderProjectForm(fm, body);
 }
 function newItem() {
   if (S.tab === 'life') { showLifeUploader(); return; }
   S.item = null;
   const today = new Date().toISOString().slice(0, 10);
-  if      (S.tab === 'ideas')                          renderIdeaForm({ date: today }, '');
-  else if (S.tab === 'blog')                           renderBlogForm({ date: today }, '', null);
+  if      (S.tab === 'blog')                           renderBlogForm({ date: today }, '', null);
   else if (S.tab === 'design' || S.tab === 'writing')  renderProjectForm({ date: today, category: S.tab }, '');
 }
 function backToList() {
@@ -495,55 +481,6 @@ async function deleteItemImg(path, sha, e) {
   if (!r) { alert('delete failed'); return; }
   if (val('f-cover') === name) setField('f-cover', '');
   await loadItemImages();
-}
-
-/* ── Ideas ── */
-function renderIdeaForm(fm, body) {
-  showContent(`
-    <button class="editor-back" onclick="backToList()">← ideas</button>
-    <label for="f-title" style="font-size:10px;color:#999;text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:.3rem">title</label>
-    <input type="text" class="title-input" id="f-title" placeholder="untitled" oninput="autoSlug()">
-    <div class="form-group"><label>content</label><textarea class="md-input" id="f-body"></textarea></div>
-    ${itemImagesHtml()}
-  `);
-  showMeta(`
-    <div class="form-group"><label>date</label><input type="date" id="f-date"></div>
-    <div class="form-group"><label>cover</label><input type="text" id="f-cover" placeholder="image.jpg"></div>
-    <div class="form-group"><label>slug</label><input type="text" id="f-slug" oninput="this.dataset.manual='1'"></div>
-    <div class="form-group"><label>status</label>
-      <select id="f-status"><option value="">published</option><option value="draft">draft</option></select>
-    </div>
-    <div class="meta-divider"></div>
-    <button class="btn btn-primary" onclick="saveIdea()">save</button>
-    <span class="status-msg" id="save-status"></span>
-  `);
-  setField('f-title', fm.title); setField('f-date', fm.date);
-  setField('f-cover', fm.cover); setField('f-slug', fm.slug);
-  setField('f-status', fm.status || '');
-  document.getElementById('f-body').value = body;
-  if (S.item) { document.getElementById('f-slug').dataset.manual = '1'; loadItemImages(); }
-}
-
-async function saveIdea() {
-  const title = val('f-title'), date = val('f-date');
-  const status = val('f-status'), cover = val('f-cover'), body = document.getElementById('f-body').value;
-  const slug = val('f-slug') || slugify(title);
-  if (!title || !date) { setStatus('err', 'title and date required'); return; }
-  const fmLines = [`title: "${title}"`, `slug: "${slug}"`, `date: ${date}`];
-  if (cover)  fmLines.push(`cover: "${cover}"`);
-  if (status) fmLines.push(`status: ${status}`);
-  const content = `---\n${fmLines.join('\n')}\n---\n\n${body.trim()}\n`;
-  const path = S.item?.path || `content/ideas/${slug}/index.md`;
-  setStatus('', 'saving…');
-  const r = await ghSave(path, content, S.item?.sha, `admin: ${S.item ? 'update' : 'add'} idea ${slug}`);
-  if (!r || r.message) { setStatus('err', r?.message || 'error'); return; }
-  S.item = { path, sha: r.content?.sha };
-  // enable image upload now that item is saved
-  const addBtn = document.querySelector('#content-form .images-section .btn-sm');
-  if (addBtn) { addBtn.disabled = false; addBtn.onclick = triggerItemImg; }
-  const grid = document.getElementById('item-img-grid');
-  if (grid?.querySelector('span')) loadItemImages();
-  setStatus('ok', 'saved ✓');
 }
 
 /* ── Blog ── */

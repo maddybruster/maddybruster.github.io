@@ -4,8 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ .Site.Title }}</title>
-    <link rel="stylesheet" href="main.css">
-    <link rel="stylesheet" href="utility.css">
+    {{ partial "head-css.html" . }}
 </head>
 <body id="top" class="my-2 mx-3">
 <div>{{ partial "nav.html" . }}</div>
@@ -22,9 +21,6 @@
                 {{ partial "work.html" . }}
             </section>
             {{ if site.Params.showDevSections }}
-            <section id="view-ideas" class="content-section">
-                {{ partial "ideas.html" . }}
-            </section>
             <section id="view-blog" class="content-section">
                 {{ partial "blog.html" . }}
             </section>

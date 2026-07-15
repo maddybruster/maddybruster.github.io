@@ -8,8 +8,6 @@
 					{{ $currentView = "view-life" }}
 				{{ else if eq .Section "blog" }}
 					{{ $currentView = "view-blog" }}
-				{{ else if eq .Section "ideas" }}
-					{{ $currentView = "view-ideas" }}
 				{{ else }}
 					{{ $currentView = "view-work" }}
 				{{ end }}
@@ -23,10 +21,6 @@
 				work
 			</label>
 			{{ if site.Params.showDevSections }}
-			<label class="nav-toggle">
-				<input type="checkbox" data-target="view-ideas"{{ if eq $currentView "view-ideas" }} checked{{ end }} />
-				ideas
-			</label>
 			{{ if where site.RegularPages "Section" "blog" }}
 			<label class="nav-toggle">
 				<input type="checkbox" data-target="view-blog"{{ if eq $currentView "view-blog" }} checked{{ end }} />

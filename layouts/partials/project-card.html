@@ -2,17 +2,12 @@
 {{ $featured := index $images 0 }}
 {{ $isDraft := eq .Params.status "draft" }}
 
-{{ $isIdea := or (in .Params.tags "idea") (in .Params.tags "ideas") (eq .Section "ideas") }}
-
 {{ if $isDraft }}
-<div class="project-card project-card--draft{{ if $isIdea }} project-card--idea{{ end }}">
+<div class="project-card project-card--draft">
 {{ else }}
-<a href="{{ .RelPermalink }}" class="project-card{{ if $isIdea }} project-card--idea{{ end }}">
+<a href="{{ .RelPermalink }}" class="project-card">
 {{ end }}
     {{ $isWebsite := eq .Params.category "website" }}
-    {{ if $isIdea }}
-    <div class="idea-bubble"></div>
-    {{ else }}
     <div class="project-image{{ if not $featured }} project-image--placeholder{{ end }}{{ if $isWebsite }} project-image--website{{ end }}">
         {{ if $featured }}
             {{ partial "responsive-image.html" (dict "image" $featured "alt" .Title "sizes" "(max-width: 768px) 100vw, 33vw" "widths" (slice 400 800 1200) "loading" "lazy" "defer" true) }}
@@ -21,5 +16,4 @@
     <div class="project-info">
         {{ with .Params.title }}<p class="project-oneline pr-3">{{ . | markdownify }}</p>{{ end }}
     </div>
-    {{ end }}
 {{ if $isDraft }}</div>{{ else }}</a>{{ end }}

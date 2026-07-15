@@ -1,0 +1,4 @@
+{{ $main := resources.Get "css/main.css" | fingerprint }}
+{{ $utility := resources.Get "css/utility.css" | fingerprint }}
+<link rel="stylesheet" href="{{ $main.RelPermalink }}">
+<link rel="stylesheet" href="{{ $utility.RelPermalink }}">
