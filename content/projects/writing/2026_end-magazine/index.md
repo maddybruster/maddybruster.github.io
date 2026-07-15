@@ -8,6 +8,6 @@ tags: ["fiction"]
 
 Five stories <br> 
 \"My Punishment,\" \"Trivial Pursuit,\" \"The Rules,\" \"The Wrong Track,\" \"Dead Ends\"<br> 
-for  [The End Magazine Issue 5](https://www.theendmagazine.net/), \"Shame\"
+for  [The End Magazine](https://www.theendmagazine.net/) Issue 5, \"Shame\"
 
 ![](my_punishment_01.png)
