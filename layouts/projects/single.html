@@ -21,7 +21,9 @@
         <div class="post-content">{{ . | safeHTML }}</div>
         {{ end }}
 
-        {{ if $images }}
+        {{/* Writing posts place images inline in the body (![](file)); never auto-dump the
+             whole bundle as a gallery for them, even if the `layout` field is missing. */}}
+        {{ if and $images (ne .Params.category "writing") }}
         <div class="post-images{{ if eq .Params.category "website" }} post-images--website{{ end }}">
             {{ range $images }}
             {{ partial "responsive-image.html" (dict "image" . "alt" $.Title "sizes" "(max-width: 768px) 100vw, 600px" "widths" (slice 400 800 1200 1600 2000) "loading" "lazy") }}
