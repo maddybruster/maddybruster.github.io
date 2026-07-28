@@ -15,5 +15,11 @@
     </div>
     <div class="project-info">
         {{ with .Params.title }}<p class="project-oneline pr-3">{{ . | markdownify }}</p>{{ end }}
+        {{ $year := or .Params.year (.Date.Format "2006") }}
+        {{ $parts := slice }}
+        {{ with .Params.category }}{{ $parts = $parts | append . }}{{ end }}
+        {{ range .Params.tags }}{{ $parts = $parts | append . }}{{ end }}
+        {{ $parts = $parts | append $year }}
+        <p class="project-meta">{{ delimit $parts ", " }}</p>
     </div>
 {{ if $isDraft }}</div>{{ else }}</a>{{ end }}
