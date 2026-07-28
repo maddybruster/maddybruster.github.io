@@ -1,11 +1,3 @@
-@font-face {
-    font-family: 'JetBrainsMono-Light';
-    src: url('/fonts/JetBrainsMono-Light.ttf') format('woff2');
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
 /* Reset and default styling */
 html {
   scroll-behavior: smooth;
@@ -19,11 +11,9 @@ html {
   --link-hover: #41cc00;
   --standard-spacer: 1rem;
   --nav-height: 0px;
-  --font-mono: 'NectoMono', ui-monospace, monospace;
   --font-size-base: 0.95rem;
   --line-height-base: 1.3;
   --font-size-small: 0.75rem;
-  --font-size-xsmall: 0.65rem;
   --font-size-large: 1.5rem;
 }
 
@@ -350,7 +340,6 @@ details.accordion p, details.accordion p:hover {
     position: absolute;
     bottom:5%;
     left: 5%;
-    font-family: var(--font-mono);
     font-size: var(--font-size-small);
     line-height: 1;
     text-align: left;
@@ -643,9 +632,8 @@ details.accordion p, details.accordion p:hover {
     flex-wrap: wrap;
     align-items: center;
     gap: var(--space-3);
-    font-family: var(--font-mono);
     font-size: var(--font-size-small);
-    color: var(--text-light);
+    color: #000;
 }
 
 .writing-single-link {
@@ -794,11 +782,10 @@ margin-right: calc(1.5* var(--standard-spacer));
 
 .month-label {
     position: absolute;
-    color: var(--text-light);
+    color: #000;
     white-space: nowrap;
     padding-top: 2px;
-    font-family: var(--font-mono);
-    font-size: var(--font-size-xsmall);
+    font-size: var(--font-size-small);
 }
 
 .gallery-feed .grid-life {
@@ -847,9 +834,8 @@ margin-right: calc(1.5* var(--standard-spacer));
     position: fixed;
     bottom: 1rem;
     left: 1.25rem;
-    color: #00AD76;
-    font-family: ui-monospace, 'Cascadia Code', Menlo, Consolas, monospace;
-    font-size: var(--font-size-xsmall);
+    color: #000;
+    font-size: var(--font-size-small);
     z-index: 10;
     opacity: 1;
     transition: opacity 0.3s ease;
@@ -927,7 +913,6 @@ margin-right: calc(1.5* var(--standard-spacer));
 
 .writing-list-header {
     font-size: var(--font-size-small);
-    font-family: var(--font-mono);
     color: var(--text-color);
    border-bottom: 1px solid var(--text-light);
     padding-bottom: 0.4rem;
@@ -957,7 +942,7 @@ margin-right: calc(1.5* var(--standard-spacer));
 
 .writing-external {
     display: inline-block;
-    font-family: var(--font-mono);
+    font-size: var(--font-size-small);
     text-decoration: none !important;
     margin-left: 0.3em;
     vertical-align: middle;
@@ -993,8 +978,7 @@ margin-right: calc(1.5* var(--standard-spacer));
 .writing-pub,
 .writing-year {
     font-size: var(--font-size-small);
-    font-family: var(--font-mono);
-    color: var(--text-light);
+    color: #000;
 }
 
 @media (max-width: 768px) {
@@ -1159,7 +1143,6 @@ margin-right: calc(1.5* var(--standard-spacer));
 }
 
 .post-content code {
-    font-family: var(--font-mono);
     font-size: var(--font-size-small);
     background-color: #f5f5f5;
     padding: 0.1em 0.35em;
@@ -1175,7 +1158,7 @@ margin-right: calc(1.5* var(--standard-spacer));
 .post-content pre code {
     background: none;
     padding: 0;
-    font-size: var(--font-size-xsmall);
+    font-size: var(--font-size-small);
 }
 
 .post-content table {
@@ -1201,7 +1184,7 @@ margin-right: calc(1.5* var(--standard-spacer));
     background-color: #f5f5f5;
 }
 
-/* Strip Chroma syntax highlighting — use plain monospace palette */
+/* Strip Chroma syntax highlighting — use plain color palette */
 .post-content .chroma { background: none; color: inherit; }
 .post-content .chroma * { color: inherit !important; background: none !important; font-style: normal !important; font-weight: inherit !important; }
 
